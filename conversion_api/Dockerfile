@@ -7,6 +7,10 @@ WORKDIR /CONVERSION_API
 # Copy the rest of the application code to the container
 COPY . .
 
+# Set environment variables
+ENV FLASK_APP="apirest"
+ENV FLASK_DEBUG=1
+
 # Install the dependencies
 RUN pip install --upgrade pip
 RUN pip install -e .
