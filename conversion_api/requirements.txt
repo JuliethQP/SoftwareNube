@@ -1,6 +1,6 @@
 aniso8601==9.0.1
 # Editable install with no version control (apirest==0.0.0)
--e c:\users\jesse.padilla\projects\myreadings\readings
+#-e c:\users\jesse.padilla\projects\myreadings\readings
 click==8.1.3
 colorama==0.4.6
 Flask==2.2.2
