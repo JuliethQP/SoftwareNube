@@ -1,0 +1,34 @@
+version: "3.8"
+services: 
+  libros-api:
+    build:
+      context: conversion_api
+      target: builder
+    container_name: conversion_api_app
+    networks:
+      - web_net
+    ports:
+     - "5000:5000"
+    depends_on: 
+      - db
+  db: 
+    container_name: conversion_db_pg
+    environment: 
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: conversion
+      POSTGRES_DB: conversion
+    image: "postgres:latest"
+    networks:
+      - web_net
+    ports: 
+      - "5432:5432"
+    volumes: 
+      - ${PWD}/postgres-data:/var/lib/postgresql/data
+
+networks:
+    web_net:
+        driver: bridge
+
+volumes: 
+  pg-data: 
+    driver: local
