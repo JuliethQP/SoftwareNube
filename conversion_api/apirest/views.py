@@ -4,6 +4,8 @@ from flask_restful import Resource
 # from sqlalchemy.exc import IntegrityError
 from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity
 import hashlib
+from .task import registrar_log 
+from datetime import datetime
 
 usuario_schema = UsuarioSchema()
 
@@ -54,7 +56,8 @@ class VistaLogin(Resource):
             if username_input and password_input:
                 payload = {"status":200}
                 token = create_access_token(
-                identity=1, additional_claims=payload)
+                identity=1, additional_claims=payload)               
+                registrar_log.delay(usuario_request, datetime.utcnow())
                 return jsonify(access_token=token)           
             
         except db.exc.DataError as e:
