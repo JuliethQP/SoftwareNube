@@ -9,11 +9,13 @@ flask run
 
 ## Correr docker compose
 En la raíz del proyecto
-```docker compose up redis
+```
+docker compose up redis
 ```
 
 ## Bajar docker compose
 En la raíz del proyecto
 
-```docker compose down
+```
+docker compose down
 ```
