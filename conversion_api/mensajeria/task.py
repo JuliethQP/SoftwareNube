@@ -20,13 +20,13 @@ def process_files(task):
     origin_file = task['file_name']
 
     filename = origin_file
-    print('<?' + format_to_convert + '>' + filename)
+    print('<?' + format_to_convert + '>' + task['id'])
 
-    if format_to_convert == 'tarbz2':
+    if format_to_convert == 'tarbz2' or format_to_convert == 'tar.bz2' or format_to_convert == 'bz2':
         convert_to_bz2(origin_file)
     elif format_to_convert == 'zip':
         convert_to_zip(origin_file)
-    elif format_to_convert == 'tar.gz':
+    elif format_to_convert == 'tar.gz' or format_to_convert == 'gz' or format_to_convert == 'targz':
         convert_to_gz(origin_file)
     else:
         print('not supported format?')

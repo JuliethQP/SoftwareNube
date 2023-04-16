@@ -69,7 +69,7 @@ class VistaLogin(Resource):
 class VistaConvertionTask(Resource):
     #Enpoint para la creación de una tarea de conversión
     def post(self):
-        valid_formats = ['zip', '7z', 'tar.gz', 'tarbz2']
+        valid_formats = ['zip', 'tar.gz', 'tar.bz2', 'gz', 'bz2', 'tarbz2', 'targz']
 
         uploaded_file = request.files.get('fileName')
         file_name =  secure_filename(datetime.now().strftime("%m%d%Y%H%M%S") + '--' + uploaded_file.filename)
@@ -82,6 +82,12 @@ class VistaConvertionTask(Resource):
         elif new_format in valid_formats:
             file_path = os.getcwd() + '/files/' + file_name
             uploaded_file.save(file_path)
+
+            if new_format == 'tar.gz' or new_format == 'targz':
+                new_format = 'gz'
+
+            if new_format == 'tar.bz2' or new_format == 'tarbz2':
+                new_format = 'bz2'
 
             nueva_conversion = Task(file_name=file_name, origin_format=origin_format, new_format=new_format, status=0, timestamp=datetime.now())
             
@@ -104,13 +110,16 @@ class VistaProcesarArchivos(Resource):
         return str(file_for_process.count()) + ' files be process'
 
 class VistaProcesarArchivo(Resource):
-    def get(self):
+    def get(self, id_task):
+        print(id_task)
         task = Task.query.get_or_404(id_task)
         file_path_processed = os.getcwd() + '/files/' + task.file_name + '.' + task.new_format
+
+        print(file_path_processed)
         if os.path.exists(file_path_processed):
             #TODO Modify the file
             print('modify')
-            return 'Update sucesfully', 200
+            return task_schema.dump(task)
         else:
             return 'File not exists', 404
         
