@@ -10,6 +10,7 @@ flask run
 ## Correr docker compose
 En la raíz del proyecto
 ```
+cd redis
 docker compose up redis
 ```
 
@@ -20,6 +21,7 @@ En la raíz del proyecto
 docker compose down
 ```
 ## Levantar la cola de mensajeria
+En la raíz del proyecto en otra consola 
 ```
 celery -A conversion_api.mensajeria.task worker -l info
 ```
