@@ -176,6 +176,7 @@ class VistaFile(Resource):
     #Endpint para la consulta de archivos originales (0) y procesados (1)
     @jwt_required()
     def get(self, filename, type):
+
         try:
             if type != 0 and type != 1:
                 return "Opción errónea de tipo de archivo a obtener (Original --> 0 - Procesado --> 1).", 404
@@ -185,12 +186,14 @@ class VistaFile(Resource):
             if task is None:
                 return "No se encuentra la tarea asociada al nombre dado.", 404
             else:
+
                 files_path_folder = os.getcwd() + '/files/'
+               
                 
-                if type == 0:
-                    return send_from_directory(files_path_folder, task.file_name), 200
+                if type == 0:                
+                    return send_from_directory(files_path_folder, task.file_name)
                 else:
-                    return send_from_directory(files_path_folder, task.file_name + '.' + task.new_format), 200
+                    return send_from_directory(files_path_folder, task.file_name + '.' + task.new_format)
 
         except Exception as ex:
             return str(ex), 500
