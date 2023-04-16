@@ -1,6 +1,6 @@
 from flask import request, flash,jsonify
 from .models import db, UsuarioSchema, Usuario, Task, TaskSchema
-from mensajeria import process_files
+from mensajeria import process_files, registrar_log
 
 from flask_restful import Resource
 # from sqlalchemy.exc import IntegrityError
@@ -58,8 +58,8 @@ class VistaLogin(Resource):
         try:
             if username_input and password_input:
                 payload = {"status":200}
-                token = create_access_token(
-                identity=1, additional_claims=payload)               
+                token = create_access_token(identity=1, additional_claims=payload)        
+                registrar_log(usuario_request, datetime.now())     
                 return jsonify(access_token=token)           
             
         except db.exc.DataError as e:

@@ -1,5 +1,4 @@
-from .models import Task
-
+from apirest.models import Task as files
 from celery import Celery
 from datetime import datetime
 
@@ -12,7 +11,7 @@ def registrar_log(usuario, fecha):
 
 @celery.task(name="process_files")
 def process_files(file_id):
-    file = Task.query.get(file_id)
+    file = files.query.get(file_id)
     print('INIT PROCESS')
     with open('log_mq.txt','a') as file:
         file.write('{} - Process file:\n'.format(file.file_name))
