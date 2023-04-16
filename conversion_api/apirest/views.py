@@ -79,7 +79,7 @@ class VistaConvertionTask(Resource):
 
         if origin_format == new_format:
             return {'mensaje':'El formato origen y destino son el mismo, no se realizará ningun proceso de conversión dado el escenario expuesto.'}, 200
-        elif origin_format in valid_formats and new_format in valid_formats:
+        elif new_format in valid_formats:
             file_path = os.getcwd() + '/files/' + file_name
             uploaded_file.save(file_path)
 
@@ -98,9 +98,7 @@ class VistaProcesarArchivos(Resource):
     def get(self):
         file_for_process = Task.query.filter_by(status=0)
 
-        for files in file_for_process:
-            #TODO llamar a la cola de ejecución con celery
-            process_files.delay(files.id)
-            print(files.file_name)
+        for file in file_for_process:
+            process_files.delay(task_schema.dump(file))
 
         return str(file_for_process.count()) + ' files be process'
