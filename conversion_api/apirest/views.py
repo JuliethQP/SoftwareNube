@@ -1,14 +1,16 @@
 from flask import request, flash,jsonify
 from .models import db, UsuarioSchema, Usuario, Task, TaskSchema
+from mensajeria import process_files
+
 from flask_restful import Resource
 # from sqlalchemy.exc import IntegrityError
 from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity
 from datetime import datetime
 from werkzeug.utils import secure_filename
+
 import os
 
 import hashlib
-
 
 usuario_schema = UsuarioSchema()
 task_schema = TaskSchema()
@@ -90,3 +92,15 @@ class VistaConvertionTask(Resource):
             return task_schema.dump(nueva_conversion), 202
         else:
             return {'mensaje':'Lo sentimos nuestro sistema no soporta dicho formato de conversión'}, 400
+
+class VistaProcesarArchivos(Resource):
+    #Funcion para procesar los archivos
+    def get(self):
+        file_for_process = Task.query.filter_by(status=0)
+
+        for files in file_for_process:
+            #TODO llamar a la cola de ejecución con celery
+            process_files.delay(files.id)
+            print(files.file_name)
+
+        return str(file_for_process.count()) + ' files be process'
