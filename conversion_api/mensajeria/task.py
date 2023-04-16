@@ -20,14 +20,19 @@ def process_files(task):
     origin_file = task['file_name']
 
     filename = origin_file
-    print('<?' + format_to_convert + '>' + task['id'])
 
     if format_to_convert == 'tarbz2' or format_to_convert == 'tar.bz2' or format_to_convert == 'bz2':
         convert_to_bz2(origin_file)
+        x = requests.get('http://localhost:5000/api/process/'+task['id'])
+        print(x.status_code)
     elif format_to_convert == 'zip':
         convert_to_zip(origin_file)
+        x = requests.get('http://localhost:5000/api/process/'+task['id'])
+        print(x.status_code)
     elif format_to_convert == 'tar.gz' or format_to_convert == 'gz' or format_to_convert == 'targz':
         convert_to_gz(origin_file)
+        x = requests.get('http://localhost:5000/api/process/'+task['id'])
+        print(x.status_code)
     else:
         print('not supported format?')
 

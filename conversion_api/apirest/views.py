@@ -73,7 +73,7 @@ class VistaConvertionTask(Resource):
         return [task_schema.dump(task) for task in tasks]
     
     #Enpoint para la creación de una tarea de conversión
-    @jwt_required() 
+    jwt_required() 
     def post(self):
         valid_formats = ['zip', 'tar.gz', 'tar.bz2', 'gz', 'bz2', 'tarbz2', 'targz']
 
@@ -117,15 +117,14 @@ class VistaProcesarArchivos(Resource):
 
 class VistaProcesarArchivo(Resource):
     def get(self, id_task):
-        print(id_task)
         task = Task.query.get_or_404(id_task)
         file_path_processed = os.getcwd() + '/files/' + task.file_name + '.' + task.new_format
 
-        print(file_path_processed)
         if os.path.exists(file_path_processed):
-            #TODO Modify the file
-            print('modify')
-            return task_schema.dump(task)
+            task.status = 1
+            db.session.add(task)
+            db.session.commit()
+            return 'File modify', 200
         else:
             return 'File not exists', 404
         
