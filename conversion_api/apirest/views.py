@@ -62,16 +62,19 @@ class VistaLogin(Resource):
 class VistaConvertionTask(Resource):
     #Enpoint para la creación de una tarea de conversión
     def post(self):
-        valid_formats = ['zip, 7z, tar.gz, tarbz2']
+        valid_formats = ['zip', '7z', 'tar.gz', 'tarbz2']
 
-        file_name = 'new_file_xxx'
-        file_format = "zip"
+        uploaded_file = request.files.get('fileName')
+        file_name = uploaded_file.filename
+        origin_format = uploaded_file.mimetype.split('/')[1]
+        new_format = request.form.getlist('newFormat')[0]
 
-        nueva_conversion = Task(file_name=file_name,
-                                origin_format=file_format, 
-                                new_format=request.json["newFormat"],
-                                state=0 # 0 == uploaded
-                            )
+        if origin_format == new_format:
+            return 'Are the same format'
+        elif origin_format in valid_formats:
+            file_name = 'new_file_xxx'
+            file_format = ".zip"
 
-
-        return nueva_conversion
+            return 'Correct format' + origin_format
+        else:
+            return 'Format not included' + origin_format
