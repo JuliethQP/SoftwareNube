@@ -1,17 +1,14 @@
 from flask import request, flash,jsonify
-from .models import db, UsuarioSchema, Usuario
+from .models import db, UsuarioSchema, Usuario, Task, TaskSchema
 from flask_restful import Resource
 # from sqlalchemy.exc import IntegrityError
 from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity
 import hashlib
-from .task import registrar_log 
-from datetime import datetime
 
 usuario_schema = UsuarioSchema()
-
+task_schema = TaskSchema()
 
 class VistaUsuarios(Resource):
-
     def post(self):
         email_request=request.json["email"]   
         usuario_request = request.json["username"]
@@ -42,8 +39,7 @@ class VistaUsuarios(Resource):
             
         except db.exc.DataError as e:
             flash('Error: {}'.format(str(e.orig)))
-            db.session.rollback()
-            
+            db.session.rollback()            
         
 class VistaLogin(Resource):
     def post(self):       
@@ -57,21 +53,25 @@ class VistaLogin(Resource):
                 payload = {"status":200}
                 token = create_access_token(
                 identity=1, additional_claims=payload)               
-                registrar_log.delay(usuario_request, datetime.utcnow())
                 return jsonify(access_token=token)           
             
         except db.exc.DataError as e:
             flash('Error: {}'.format(str(e.orig)))
             db.session.rollback()
-            
-class VistaTasks(Resource):
-    @jwt_required()
-    def get(self):        
-        try:
-            return {'mensaje':'prueba'}, 201                     
-                
-        except db.exc.DataError as e:
-                flash('Error: {}'.format(str(e.orig)))
-                db.session.rollback()
-            
-    
+
+class VistaConvertionTask(Resource):
+    #Enpoint para la creación de una tarea de conversión
+    def post(self):
+        valid_formats = ['zip, 7z, tar.gz, tarbz2']
+
+        file_name = 'new_file_xxx'
+        file_format = "zip"
+
+        nueva_conversion = Task(file_name=file_name,
+                                origin_format=file_format, 
+                                new_format=request.json["newFormat"],
+                                state=0 # 0 == uploaded
+                            )
+
+
+        return nueva_conversion
