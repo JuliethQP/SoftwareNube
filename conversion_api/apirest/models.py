@@ -16,7 +16,8 @@ class Task(db.Model):
     file_name = db.Column(db.String, nullable=False)
     origin_format = db.Column(db.String, nullable=False)
     new_format = db.Column(db.String, nullable=False)
-    state = db.Column(db.Integer, nullable=False) # 0 == uploaded ; 1 == procesed
+    status = db.Column(db.Integer, nullable=False)
+    timestamp = db.Column(db.String, nullable=False)
 
 class UsuarioSchema(SQLAlchemyAutoSchema):
     class Meta:

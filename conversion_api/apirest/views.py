@@ -3,7 +3,12 @@ from .models import db, UsuarioSchema, Usuario, Task, TaskSchema
 from flask_restful import Resource
 # from sqlalchemy.exc import IntegrityError
 from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity
+from datetime import datetime
+from werkzeug.utils import secure_filename
+import os
+
 import hashlib
+
 
 usuario_schema = UsuarioSchema()
 task_schema = TaskSchema()
@@ -65,16 +70,23 @@ class VistaConvertionTask(Resource):
         valid_formats = ['zip', '7z', 'tar.gz', 'tarbz2']
 
         uploaded_file = request.files.get('fileName')
-        file_name = uploaded_file.filename
+        file_name =  secure_filename(datetime.now().strftime("%m%d%Y%H%M%S") + '--' + uploaded_file.filename)
+
         origin_format = uploaded_file.mimetype.split('/')[1]
         new_format = request.form.getlist('newFormat')[0]
 
         if origin_format == new_format:
-            return 'Are the same format'
-        elif origin_format in valid_formats:
-            file_name = 'new_file_xxx'
-            file_format = ".zip"
+            return {'mensaje':'El formato origen y destino son el mismo, no se realizará ningun proceso de conversión dado el escenario expuesto.'}, 200
+        elif origin_format in valid_formats and new_format in valid_formats:
+            file_path = os.getcwd() + '/files/' + file_name
+            uploaded_file.save(file_path)
 
-            return 'Correct format' + origin_format
+            nueva_conversion = Task(file_name=file_name, origin_format=origin_format, new_format=new_format, status=0, timestamp=datetime.now())
+            
+            db.session.add(nueva_conversion)
+            db.session.commit()
+            usuario_schema.dump(nueva_conversion)
+
+            return task_schema.dump(nueva_conversion), 202
         else:
-            return 'Format not included' + origin_format
+            return {'mensaje':'Lo sentimos nuestro sistema no soporta dicho formato de conversión'}, 400
