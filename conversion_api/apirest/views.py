@@ -113,8 +113,7 @@ class VistaProcesarArchivo(Resource):
             return 'Update sucesfully', 200
         else:
             return 'File not exists', 404
-
-
+        
 class VistaTask(Resource):
     #Endpoint con las operaciones relacionadas a una tarea en específico
     def delete(self, id_task):
@@ -139,6 +138,13 @@ class VistaTask(Resource):
                 return "No se encuentran los archivos a borrar.", 404
         except Exception as ex:
             return str(ex), 500
+        
+    def get(self, id_task):
+        task = Task.query.get_or_404(id_task)
+        if task is None:
+            return "La tarea con el id dado no existe.", 404
+        else: 
+            return task_schema.dump(task), 200
         
 class VistaFile(Resource):
     #Endpint para la consulta de archivos originales (0) y procesados (1)
