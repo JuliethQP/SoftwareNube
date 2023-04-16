@@ -67,7 +67,13 @@ class VistaLogin(Resource):
             db.session.rollback()
 
 class VistaConvertionTask(Resource):
+    @jwt_required() 
+    def get(self):
+        tasks = Task.query.all()
+        return [task_schema.dump(task) for task in tasks]
+    
     #Enpoint para la creación de una tarea de conversión
+    @jwt_required() 
     def post(self):
         valid_formats = ['zip', 'tar.gz', 'tar.bz2', 'gz', 'bz2', 'tarbz2', 'targz']
 
@@ -124,7 +130,16 @@ class VistaProcesarArchivo(Resource):
             return 'File not exists', 404
         
 class VistaTask(Resource):
+    @jwt_required()
+    def get(self, id_task):
+        task = Task.query.get_or_404(id_task)
+        if task is None:
+            return "La tarea con el id dado no existe.", 404
+        else:
+            return task_schema.dump(task), 200
+        
     #Endpoint con las operaciones relacionadas a una tarea en específico
+    @jwt_required()
     def delete(self, id_task):
 
         try:
@@ -149,7 +164,7 @@ class VistaTask(Resource):
             
         except Exception as ex:
             return str(ex), 500
-        
+    @jwt_required()   
     def get(self, id_task):
         task = Task.query.get_or_404(id_task)
         if task is None:
@@ -159,6 +174,7 @@ class VistaTask(Resource):
         
 class VistaFile(Resource):
     #Endpint para la consulta de archivos originales (0) y procesados (1)
+    @jwt_required()
     def get(self, filename, type):
         try:
             if type != 0 and type != 1:
