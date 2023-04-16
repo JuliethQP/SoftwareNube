@@ -11,7 +11,7 @@ FILE_PATH = '/conversion_api/files/'
 
 @celery.task(name="registrar_log")
 def registrar_log(usuario, fecha):
-    with open('conversion_api/mensajeria/log_signin.txt','a') as file:
+    with open('conversion_api/mensajeria/log_signin.txt','a+') as file:
         file.write('{} - Inicio de sesión:{}\n'.format(usuario, fecha))
 
 @celery.task(name="process_files")

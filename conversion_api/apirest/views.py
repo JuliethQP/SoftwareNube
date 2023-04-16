@@ -59,7 +59,7 @@ class VistaLogin(Resource):
             if username_input and password_input:
                 payload = {"status":200}
                 token = create_access_token(identity=1, additional_claims=payload)        
-                registrar_log(usuario_request, datetime.now())     
+                # registrar_log(usuario_request, datetime.now())     
                 return jsonify(access_token=token)           
             
         except db.exc.DataError as e:
