@@ -1,17 +1,19 @@
 from flask import request, flash,jsonify
-from .models import db, UsuarioSchema, Usuario
+from .models import db, UsuarioSchema, Usuario, Task, TaskSchema
 from flask_restful import Resource
 # from sqlalchemy.exc import IntegrityError
 from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity
-import hashlib
-from .task import registrar_log 
 from datetime import datetime
+from werkzeug.utils import secure_filename
+import os
+
+import hashlib
+
 
 usuario_schema = UsuarioSchema()
-
+task_schema = TaskSchema()
 
 class VistaUsuarios(Resource):
-
     def post(self):
         email_request=request.json["email"]   
         usuario_request = request.json["username"]
@@ -42,8 +44,7 @@ class VistaUsuarios(Resource):
             
         except db.exc.DataError as e:
             flash('Error: {}'.format(str(e.orig)))
-            db.session.rollback()
-            
+            db.session.rollback()            
         
 class VistaLogin(Resource):
     def post(self):       
@@ -57,21 +58,35 @@ class VistaLogin(Resource):
                 payload = {"status":200}
                 token = create_access_token(
                 identity=1, additional_claims=payload)               
-                registrar_log.delay(usuario_request, datetime.utcnow())
                 return jsonify(access_token=token)           
             
         except db.exc.DataError as e:
             flash('Error: {}'.format(str(e.orig)))
             db.session.rollback()
+
+class VistaConvertionTask(Resource):
+    #Enpoint para la creación de una tarea de conversión
+    def post(self):
+        valid_formats = ['zip', '7z', 'tar.gz', 'tarbz2']
+
+        uploaded_file = request.files.get('fileName')
+        file_name =  secure_filename(datetime.now().strftime("%m%d%Y%H%M%S") + '--' + uploaded_file.filename)
+
+        origin_format = uploaded_file.mimetype.split('/')[1]
+        new_format = request.form.getlist('newFormat')[0]
+
+        if origin_format == new_format:
+            return {'mensaje':'El formato origen y destino son el mismo, no se realizará ningun proceso de conversión dado el escenario expuesto.'}, 200
+        elif origin_format in valid_formats and new_format in valid_formats:
+            file_path = os.getcwd() + '/files/' + file_name
+            uploaded_file.save(file_path)
+
+            nueva_conversion = Task(file_name=file_name, origin_format=origin_format, new_format=new_format, status=0, timestamp=datetime.now())
             
-class VistaTasks(Resource):
-    @jwt_required()
-    def get(self):        
-        try:
-            return {'mensaje':'prueba'}, 201                     
-                
-        except db.exc.DataError as e:
-                flash('Error: {}'.format(str(e.orig)))
-                db.session.rollback()
-            
-    
+            db.session.add(nueva_conversion)
+            db.session.commit()
+            usuario_schema.dump(nueva_conversion)
+
+            return task_schema.dump(nueva_conversion), 202
+        else:
+            return {'mensaje':'Lo sentimos nuestro sistema no soporta dicho formato de conversión'}, 400
