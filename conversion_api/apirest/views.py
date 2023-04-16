@@ -97,7 +97,6 @@ class VistaTask(Resource):
         try:
             task = Task.query.get_or_404(id_task)
 
-            print("llegó")
             if task is None:
                 return "La tarea con el id dado no existe.", 404    
             elif task.id != 1:
@@ -109,9 +108,12 @@ class VistaTask(Resource):
             if os.path.exists(file_path_origin) and os.path.exists(file_path_processed):
                 os.remove(file_path_origin)
                 os.remove(file_path_processed)
+                db.session.remove(task)
+                db.session.commit()
                 return "Los archivos han sido borrados exitosamente.", 204
             else:
                 return "No se encuentran los archivos a borrar.", 404
+            
         except Exception as ex:
             return str(ex), 500
         
