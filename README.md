@@ -23,5 +23,6 @@ docker compose down
 ## Levantar la cola de mensajeria
 En la raíz del proyecto en otra consola 
 ```
+venv\Scripts\activate
 celery -A conversion_api.mensajeria.task worker -l info
 ```
