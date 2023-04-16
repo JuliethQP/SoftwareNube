@@ -24,5 +24,6 @@ api.add_resource(VistaFile, '/api/files/<string:filename>/<int:type>')
 
 #Convertir los archivos pendientes
 api.add_resource(VistaProcesarArchivos, '/api/process')
+api.add_resource(VistaProcesarArchivo, '/api/process/<int:id_task>')
 
 jwt = JWTManager(app)

@@ -1,11 +1,10 @@
 from celery import Celery
 from datetime import datetime
 
-import zipfile
-import bz2
-import gzip
-import os
-import sys
+from zipfile import ZipFile
+import bz2, gzip
+import os, sys
+import requests
 
 celery = Celery('tasks', broker='redis://localhost:6379/0')
 FILE_PATH = '/conversion_api/files/'
@@ -23,34 +22,51 @@ def process_files(task):
     filename = origin_file
     print('<?' + format_to_convert + '>' + filename)
 
-
     if format_to_convert == 'tarbz2':
         convert_to_bz2(origin_file)
+    elif format_to_convert == 'zip':
+        convert_to_zip(origin_file)
+    elif format_to_convert == 'tar.gz':
+        convert_to_gz(origin_file)
     else:
         print('not supported format?')
 
-    with open('conversion_api/mensajeria/log_mq.txt','a+') as file:
-        file.write('{} - Process file:\n'.format(origin_file))
+def verify_path():
+    if 'files' in os.getcwd():
+        print(os.getcwd())
+    else:
+        file_path = os.getcwd() + '/conversion_api/files/'
+        os.chdir(file_path)
+    print(os.getcwd())
 
 def convert_to_zip(filename):
+    verify_path()
     with ZipFile(filename + ".zip", "w") as f:
         arcname = filename.replace("\\", "/")
         arcname = arcname[arcname.rfind("/") + 1:]
         f.write(filename, arcname)
 
 def convert_to_gz(filename):
-    data = read_file(filename)
+    verify_path()
+    try:
+        f = open(filename, "rb")
+    except IOError as e:
+        print(e.errno, e.message)
+    else:
+        data = f.read()
+        f.close()
+
     if data is not None:
         f = gzip.open(filename + ".gz", "wb")
         f.write(data)
         f.close()
 
 def convert_to_bz2(filename):
-    file_path = os.getcwd() + '/files/' + filename
-    print('__file__:    ', file_path)
+    verify_path()
+    print(__file__)
     
-    input_file = open(file_path, "rb")
-    output_file = open(file_path + 'bz2', "wb")
+    input_file = open(filename, "rb")
+    output_file = open(filename + '.bz2', "wb")
     output_file.write(bz2.compress(input_file.read()))
 
     output_file.close()

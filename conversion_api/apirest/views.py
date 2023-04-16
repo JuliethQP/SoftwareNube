@@ -102,7 +102,19 @@ class VistaProcesarArchivos(Resource):
             process_files.delay(task_schema.dump(file))
 
         return str(file_for_process.count()) + ' files be process'
-        
+
+class VistaProcesarArchivo(Resource):
+    def get(self):
+        task = Task.query.get_or_404(id_task)
+        file_path_processed = os.getcwd() + '/files/' + task.file_name + '.' + task.new_format
+        if os.path.exists(file_path_processed):
+            #TODO Modify the file
+            print('modify')
+            return 'Update sucesfully', 200
+        else:
+            return 'File not exists', 404
+
+
 class VistaTask(Resource):
     #Endpoint con las operaciones relacionadas a una tarea en específico
     def delete(self, id_task):
@@ -131,7 +143,6 @@ class VistaTask(Resource):
 class VistaFile(Resource):
     #Endpint para la consulta de archivos originales (0) y procesados (1)
     def get(self, filename, type):
-
         try:
             if type != 0 and type != 1:
                 return "Opción errónea de tipo de archivo a obtener (Original --> 0 - Procesado --> 1).", 404
