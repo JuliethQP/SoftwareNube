@@ -1,10 +1,13 @@
 from flask import request, flash, jsonify, send_from_directory
 from .models import db, UsuarioSchema, Usuario, Task, TaskSchema
+from mensajeria import process_files, registrar_log
+
 from flask_restful import Resource
 # from sqlalchemy.exc import IntegrityError
 from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity
 from datetime import datetime
 from werkzeug.utils import secure_filename
+
 import os
 
 import hashlib
@@ -55,8 +58,8 @@ class VistaLogin(Resource):
         try:
             if username_input and password_input:
                 payload = {"status":200}
-                token = create_access_token(
-                identity=1, additional_claims=payload)               
+                token = create_access_token(identity=1, additional_claims=payload)        
+                registrar_log(usuario_request, datetime.now())     
                 return jsonify(access_token=token)           
             
         except db.exc.DataError as e:
@@ -76,7 +79,7 @@ class VistaConvertionTask(Resource):
 
         if origin_format == new_format:
             return {'mensaje':'El formato origen y destino son el mismo, no se realizará ningun proceso de conversión dado el escenario expuesto.'}, 200
-        elif origin_format in valid_formats and new_format in valid_formats:
+        elif new_format in valid_formats:
             file_path = os.getcwd() + '/files/' + file_name
             uploaded_file.save(file_path)
 
@@ -89,6 +92,27 @@ class VistaConvertionTask(Resource):
             return task_schema.dump(nueva_conversion), 202
         else:
             return {'mensaje':'Lo sentimos nuestro sistema no soporta dicho formato de conversión'}, 400
+
+class VistaProcesarArchivos(Resource):
+    #Funcion para procesar los archivos
+    def get(self):
+        file_for_process = Task.query.filter_by(status=0)
+
+        for file in file_for_process:
+            process_files.delay(task_schema.dump(file))
+
+        return str(file_for_process.count()) + ' files be process'
+
+class VistaProcesarArchivo(Resource):
+    def get(self):
+        task = Task.query.get_or_404(id_task)
+        file_path_processed = os.getcwd() + '/files/' + task.file_name + '.' + task.new_format
+        if os.path.exists(file_path_processed):
+            #TODO Modify the file
+            print('modify')
+            return 'Update sucesfully', 200
+        else:
+            return 'File not exists', 404
         
 class VistaTask(Resource):
     #Endpoint con las operaciones relacionadas a una tarea en específico
@@ -117,10 +141,16 @@ class VistaTask(Resource):
         except Exception as ex:
             return str(ex), 500
         
+    def get(self, id_task):
+        task = Task.query.get_or_404(id_task)
+        if task is None:
+            return "La tarea con el id dado no existe.", 404
+        else: 
+            return task_schema.dump(task), 200
+        
 class VistaFile(Resource):
     #Endpint para la consulta de archivos originales (0) y procesados (1)
     def get(self, filename, type):
-
         try:
             if type != 0 and type != 1:
                 return "Opción errónea de tipo de archivo a obtener (Original --> 0 - Procesado --> 1).", 404

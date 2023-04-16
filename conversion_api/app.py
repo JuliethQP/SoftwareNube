@@ -4,7 +4,7 @@ from apirest.views import *
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
 
-app=create_app('default')
+app=create_app('tasks')
 app_context=app.app_context()
 app_context.push()
 
@@ -21,5 +21,9 @@ api.add_resource(VistaLogin, '/api/auth/login')
 api.add_resource(VistaConvertionTask, '/api/tasks')
 api.add_resource(VistaTask, '/api/task/<int:id_task>')
 api.add_resource(VistaFile, '/api/files/<string:filename>/<int:type>')
+
+#Convertir los archivos pendientes
+api.add_resource(VistaProcesarArchivos, '/api/process')
+api.add_resource(VistaProcesarArchivo, '/api/process/<int:id_task>')
 
 jwt = JWTManager(app)
