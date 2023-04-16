@@ -1,4 +1,4 @@
-from flask import request, flash,jsonify
+from flask import request, flash, jsonify, send_from_directory
 from .models import db, UsuarioSchema, Usuario, Task, TaskSchema
 from mensajeria import process_files, registrar_log
 
@@ -102,3 +102,51 @@ class VistaProcesarArchivos(Resource):
             process_files.delay(task_schema.dump(file))
 
         return str(file_for_process.count()) + ' files be process'
+        
+class VistaTask(Resource):
+    #Endpoint con las operaciones relacionadas a una tarea en específico
+    def delete(self, id_task):
+
+        try:
+            task = Task.query.get_or_404(id_task)
+
+            print("llegó")
+            if task is None:
+                return "La tarea con el id dado no existe.", 404    
+            elif task.id != 1:
+                return "La tarea con el id dado no se encuentra finalizada, no procede la eliminación.", 400
+            
+            file_path_origin = os.getcwd() + '/files/' + task.file_name
+            file_path_processed = os.getcwd() + '/files/' + task.file_name + '.' + task.new_format
+
+            if os.path.exists(file_path_origin) and os.path.exists(file_path_processed):
+                os.remove(file_path_origin)
+                os.remove(file_path_processed)
+                return "Los archivos han sido borrados exitosamente.", 204
+            else:
+                return "No se encuentran los archivos a borrar.", 404
+        except Exception as ex:
+            return str(ex), 500
+        
+class VistaFile(Resource):
+    #Endpint para la consulta de archivos originales (0) y procesados (1)
+    def get(self, filename, type):
+
+        try:
+            if type != 0 and type != 1:
+                return "Opción errónea de tipo de archivo a obtener (Original --> 0 - Procesado --> 1).", 404
+
+            task = Task.query.filter(Task.file_name == filename).first()
+            
+            if task is None:
+                return "No se encuentra la tarea asociada al nombre dado.", 404
+            else:
+                files_path_folder = os.getcwd() + '/files/'
+                
+                if type == 0:
+                    return send_from_directory(files_path_folder, task.file_name), 200
+                else:
+                    return send_from_directory(files_path_folder, task.file_name + '.' + task.new_format), 200
+
+        except Exception as ex:
+            return str(ex), 500

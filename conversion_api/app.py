@@ -19,6 +19,8 @@ api.add_resource(VistaLogin, '/api/auth/login')
 
 #Tareas de conversion
 api.add_resource(VistaConvertionTask, '/api/tasks')
+api.add_resource(VistaTask, '/api/task/<int:id_task>')
+api.add_resource(VistaFile, '/api/files/<string:filename>/<int:type>')
 
 #Convertir los archivos pendientes
 api.add_resource(VistaProcesarArchivos, '/api/process')
