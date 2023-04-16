@@ -24,9 +24,12 @@ class UsuarioSchema(SQLAlchemyAutoSchema):
         model = Usuario
         include_relationships = True
         load_instance = True
+    id = fields.String()
 
 class TaskSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = Task
         include_relationships = True
         load_instance = True
+    id = fields.String()
+    status = fields.String()
