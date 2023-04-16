@@ -19,3 +19,7 @@ En la raíz del proyecto
 ```
 docker compose down
 ```
+## Levantar la cola de mensajeria
+```
+celery -A conversion_api.mensajeria.task worker -l info
+```
