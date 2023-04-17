@@ -3,26 +3,29 @@ services:
   cronjob:
       build: cronjob
       volumes:
-        - ./cronjob:/etc/cron.d/cronjob
+        - ${PWD}/cronjob:/root
       command: ["sh", "-c", "cron && tail -f /var/log/cron.log"]
   conversion-api:
     build:
-      context: conversion_api   
+      context: conversion_api
     container_name: conversion_api_app
     networks:
       - web_net
     ports:
-     - "5000:5000"
+     - "5500:5000"
     depends_on: 
       - db
+    volumes: 
+      - ${PWD}/conversion_api:/app
   celery:
     build:
-      context: .  
+      context: conversion_api  
+      dockerfile: mq.Dockerfile
     container_name: celery-app
     networks:
-      - web_net
-    depends_on: 
-      - db
+      - web_net    
+    volumes: 
+      - ${PWD}/conversion_api:/app
   db: 
     container_name: conversion_db_pg
     environment: 

@@ -1,2 +1,5 @@
 venv
 apirest.egg-info
+__pycache__
+apirest/__pycache__
+mensajeria/__pycache__

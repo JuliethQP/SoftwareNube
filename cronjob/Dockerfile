@@ -1,17 +1,23 @@
 FROM ubuntu:20.04
 
+WORKDIR /app
+
 # Copia el archivo cronjob
-COPY cronjob /etc/cron.d/
+COPY cronjob.sh /root/cronjob.sh
 
-# Instala cron y otros paquetes
-RUN apt-get update && apt-get -y install cron
+# Give execution rights on the cron scripts
+RUN chmod 0644 /root/cronjob.sh
 
-# Copia los archivos de la aplicación
+# Create the log file to be able to run tail
+RUN touch /var/log/cron.log
 
-COPY requirements.txt .
+#Install Cron
+RUN apt-get update
+RUN apt-get -y install cron
 
-# Instala dependencias
-RUN apt-get update && apt-get -y install python3-pip
 
-# Establece el comando de inicio
-CMD service cron start
+# Add the cron job
+RUN crontab -l | { cat; echo "* * * * * bash /root/cronjob.sh"; } | crontab -
+
+# Run the command on container startup
+CMD cron
