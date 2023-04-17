@@ -1,14 +1,26 @@
 version: "3.8"
 services:
+  cronjob:
+      build: cronjob
+      volumes:
+        - ./cronjob:/etc/cron.d/cronjob
+      command: ["sh", "-c", "cron && tail -f /var/log/cron.log"]
   conversion-api:
     build:
-      context: conversion_api
-      target: builder
+      context: conversion_api   
     container_name: conversion_api_app
     networks:
       - web_net
     ports:
      - "5000:5000"
+    depends_on: 
+      - db
+  celery:
+    build:
+      context: .  
+    container_name: celery-app
+    networks:
+      - web_net
     depends_on: 
       - db
   db: 
@@ -26,8 +38,7 @@ services:
       - ${PWD}/postgres-data:/var/lib/postgresql/data
   redis:
     build:
-      context: redis
-      target: builder
+      context: redis 
     image: 'redis'
     ports:
       - '6379:6379'

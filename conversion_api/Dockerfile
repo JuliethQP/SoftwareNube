@@ -1,22 +1,23 @@
-# Use an official Python runtime as the base image
-FROM python:3.11
+FROM python:3.9.16-slim-buster
 
-# Set the working directory in the container to /app
-WORKDIR /CONVERSION_API
+# Set working directory
+WORKDIR /app
 
-# Copy the rest of the application code to the container
+RUN mkdir /app/files
+# Copy the requirements file
+COPY requirements.txt .
+
+# Install dependencies
+
+RUN pip3 install -r requirements.txt
+
+
+# Copy the rest of the application code
 COPY . .
 
-# Set environment variables
-ENV FLASK_APP="apirest"
-ENV FLASK_DEBUG=1
-
-# Install the dependencies
-RUN pip install --upgrade pip
-RUN pip install -e .
-
-# Expose port 5000 for the Flask development server to listen on
+# Expose port 5000
 EXPOSE 5000
 
-# Define the command to run the Flask development server
-CMD ["flask", "run", "--host=0.0.0.0"]
+ENV FLASK_APP=flaskr/app.py
+# Start the application
+CMD [ "python", "-m" , "flask", "run", "--host=0.0.0.0"]

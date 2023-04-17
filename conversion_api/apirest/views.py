@@ -7,6 +7,7 @@ from flask_restful import Resource
 from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity
 from datetime import datetime
 from werkzeug.utils import secure_filename
+import re
 
 import os
 
@@ -60,7 +61,9 @@ class VistaLogin(Resource):
                 payload = {"status":200}
                 token = create_access_token(identity=1, additional_claims=payload)        
                 # registrar_log(usuario_request, datetime.now())     
-                return jsonify(access_token=token)           
+                return jsonify(access_token=token)      
+            else:
+                return {"mensaje":"usuario no existe"}     
             
         except db.exc.DataError as e:
             flash('Error: {}'.format(str(e.orig)))
@@ -73,7 +76,7 @@ class VistaConvertionTask(Resource):
         return [task_schema.dump(task) for task in tasks]
     
     #Enpoint para la creación de una tarea de conversión
-    jwt_required() 
+    @jwt_required() 
     def post(self):
         valid_formats = ['zip', 'tar.gz', 'tar.bz2', 'gz', 'bz2', 'tarbz2', 'targz']
 
@@ -87,6 +90,8 @@ class VistaConvertionTask(Resource):
             return {'mensaje':'El formato origen y destino son el mismo, no se realizará ningun proceso de conversión dado el escenario expuesto.'}, 200
         elif new_format in valid_formats:
             file_path = os.getcwd() + '/files/' + file_name
+            file_path = re.sub(r'\\\\', r'\\', file_path)
+            print('--------file_path-----',file_path)
             uploaded_file.save(file_path)
 
             if new_format == 'tar.gz' or new_format == 'targz':
@@ -175,7 +180,6 @@ class VistaFile(Resource):
     #Endpint para la consulta de archivos originales (0) y procesados (1)
     @jwt_required()
     def get(self, filename, type):
-
         try:
             if type != 0 and type != 1:
                 return "Opción errónea de tipo de archivo a obtener (Original --> 0 - Procesado --> 1).", 404
