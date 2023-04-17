@@ -43,10 +43,12 @@ services:
     build:
       context: redis 
     image: 'redis'
+    networks:
+      - web_net  
     ports:
       - '6379:6379'
     volumes:
-      - redisdata:/data
+      - ${PWD}/redis:/app
 
 networks:
     web_net:
