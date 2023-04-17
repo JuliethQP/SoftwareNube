@@ -6,7 +6,7 @@ import bz2, gzip
 import os, sys
 import requests
 
-celery = Celery('tasks', broker='redis://localhost:6379/0')
+celery = Celery('tasks', broker='redis://local:6379/0')
 FILE_PATH = '/conversion_api/files/'
 
 @celery.task(name="registrar_log")

@@ -47,15 +47,6 @@ services:
       - '6379:6379'
     volumes:
       - redisdata:/data
-  redis-commander:
-    image: ghcr.io/joeferner/redis-commander:latest
-    restart: always
-    environment:
-      - REDIS_HOSTS=local:redis:6379:0:redisultramegasecurepassword
-    ports:
-      - '8081:8081'
-    depends_on:
-      - 'redis'
 
 networks:
     web_net:
