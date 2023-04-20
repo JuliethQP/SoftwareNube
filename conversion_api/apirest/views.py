@@ -1,6 +1,6 @@
 from flask import request, flash, jsonify, send_from_directory
 from .models import db, UsuarioSchema, Usuario, Task, TaskSchema
-from mensajeria import process_files, registrar_log
+from mensajeria import process_files
 
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, create_access_token
@@ -148,9 +148,7 @@ class VistaTask(Resource):
         try:
             task = Task.query.get_or_404(id_task)
 
-            if task is None:
-                return "La tarea con el id dado no existe.", 404    
-            elif task.id != 1:
+            if task.status != 1:
                 return "La tarea con el id dado no se encuentra finalizada, no procede la eliminación.", 400
             
             file_path_origin = os.getcwd() + '/files/' + task.file_name
@@ -159,7 +157,7 @@ class VistaTask(Resource):
             if os.path.exists(file_path_origin) and os.path.exists(file_path_processed):
                 os.remove(file_path_origin)
                 os.remove(file_path_processed)
-                db.session.remove(task)
+                db.session.delete(task)
                 db.session.commit()
                 return "Los archivos han sido borrados exitosamente.", 204
             else:
