@@ -1,3 +1,9 @@
+## PARA EJECUTAR LA APP EN DOCKER
+En la raíz del proyecto
+```
+docker-compose up -d
+```
+
 ## Correr la aplicación de flask 
 ```
 cd conversion_api
