@@ -1,10 +1,9 @@
-from flask import request, flash, jsonify, send_from_directory, redirect, url_for
+from flask import request, flash, jsonify, send_from_directory
 from .models import db, UsuarioSchema, Usuario, Task, TaskSchema
 from mensajeria import process_files, registrar_log
 
 from flask_restful import Resource
-# from sqlalchemy.exc import IntegrityError
-from flask_jwt_extended import jwt_required, create_access_token, get_jwt_identity
+from flask_jwt_extended import jwt_required, create_access_token
 from datetime import datetime
 from werkzeug.utils import secure_filename
 import re
@@ -177,7 +176,7 @@ class VistaTask(Resource):
             return task_schema.dump(task), 200
         
 class VistaFile(Resource):
-    #Endpint para la consulta de archivos originales (0) y procesados (1)
+    #Endpoint para la consulta de archivos originales (0) y procesados (1)
     @jwt_required()
     def get(self, filename, type):
         try:
@@ -192,12 +191,10 @@ class VistaFile(Resource):
 
                 files_path_folder = os.getcwd() + '/files/'
                 
-                if type == 0:                
-                    return redirect(url_for('download_file', name=files_path_folder + task.file_name))
-                    #return send_from_directory(files_path_folder, task.file_name)
+                if type == 0:
+                    return send_from_directory(files_path_folder, task.file_name, as_attachment=True)
                 else:
-                    return redirect(url_for('download_file', name=files_path_folder + task.file_name + '.' + task.new_format))
-                    #return send_from_directory(files_path_folder, task.file_name + '.' + task.new_format)
+                    return send_from_directory(files_path_folder, task.file_name + '.' + task.new_format, as_attachment=True)
 
         except Exception as ex:
             return str(ex), 500
