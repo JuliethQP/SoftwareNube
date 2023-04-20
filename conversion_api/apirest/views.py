@@ -1,4 +1,4 @@
-from flask import request, flash, jsonify, send_from_directory
+from flask import request, flash, jsonify, send_from_directory, redirect, url_for
 from .models import db, UsuarioSchema, Usuario, Task, TaskSchema
 from mensajeria import process_files, registrar_log
 
@@ -191,12 +191,13 @@ class VistaFile(Resource):
             else:
 
                 files_path_folder = os.getcwd() + '/files/'
-               
                 
                 if type == 0:                
-                    return send_from_directory(files_path_folder, task.file_name)
+                    return redirect(url_for('download_file', name=files_path_folder + task.file_name))
+                    #return send_from_directory(files_path_folder, task.file_name)
                 else:
-                    return send_from_directory(files_path_folder, task.file_name + '.' + task.new_format)
+                    return redirect(url_for('download_file', name=files_path_folder + task.file_name + '.' + task.new_format))
+                    #return send_from_directory(files_path_folder, task.file_name + '.' + task.new_format)
 
         except Exception as ex:
             return str(ex), 500
