@@ -6,7 +6,9 @@ import bz2, gzip
 import os, sys
 import requests
 
-celery = Celery('tasks', broker='redis://redis:6379/0')
+
+celery = Celery('tasks', broker="redis://:redisultramegasecurepassword@redis:6379/0")
+
 FILE_PATH = '/conversion_api/files/'
 
 @celery.task(name="registrar_log")
@@ -23,15 +25,15 @@ def process_files(task):
 
     if format_to_convert == 'tarbz2' or format_to_convert == 'tar.bz2' or format_to_convert == 'bz2':
         convert_to_bz2(origin_file)
-        x = requests.get('http://127.0.0.1:5500/api/process/'+task['id'])
+        x = requests.get('http://localhost:5500/api/process/'+task['id'])
         print(x.status_code)
     elif format_to_convert == 'zip':
         convert_to_zip(origin_file)
-        x = requests.get('http://127.0.0.1:5500/api/process/'+task['id'])
+        x = requests.get('http://localhost:5500/api/process/'+task['id'])
         print(x.status_code)
     elif format_to_convert == 'tar.gz' or format_to_convert == 'gz' or format_to_convert == 'targz':
         convert_to_gz(origin_file)
-        x = requests.get('http://127.0.0.1:5500/api/process/'+task['id'])
+        x = requests.get('http://localhost:5500/api/process/'+task['id'])
         print(x.status_code)
     else:
         print('not supported format?')
