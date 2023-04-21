@@ -7,7 +7,8 @@ import os, sys
 import requests
 
 
-celery = Celery('tasks', broker="redis://redis:6379/0")
+# celery = Celery('tasks', broker="redis://redis:6379/0")
+celery = Celery('tasks', broker="redis://:redisultramegasecurepassword@redis:6379/0")
 
 FILE_PATH = '/conversion_api/files/'
 
