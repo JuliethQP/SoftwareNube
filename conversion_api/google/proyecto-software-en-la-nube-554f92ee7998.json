@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "proyecto-software-en-la-nube",
+  "private_key_id": "554f92ee79984e7b72210fac0cd64f070147e39b",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC5Bbe1oG9hF+T8\ny3a/01Oar0snx/t7SmaKb+fjUGvYfIWJ+GapxOTFD7mGuqB6pRm120tF+xvisgpf\ndhCBDh24BNFRD0gv7TkuYu3ZGlyaMFcVK40lRdOVrevjKRCKqEd3XoTace5Xknxp\nRiwF/KVDiahtS/Ufx0Mwh2EaZlKBXToG8Ch2K9h4vMbJmcPXpBjxU9hkSucEC7fa\nFfoIpbNDVrnaw8e+BDhZsXAu5UUlvo87MBt66WxJH99NRzyKn8Lk8k2VZbwi8fpW\niEuovC3qyJ5V/c1oo3KjIuMjDLfYvxSDVCOtC2Q5tReDirtb5wW2EWubRBuVpeuM\nD+lDj2fhAgMBAAECggEAKfrZ4Kgm9U70WgY5KpOCkeOJiBxoGyR5qRn0cX9XBN7V\n9sTJWGYv6OVlOSRBkqpAr+IyjU2JGXG/iELTwlBnXlAbhQqUXKl0sqloIX0Je0OS\nEp/XzdfuxrSYQ6mW0vsVAgjMWHsGstBuEX3GMdKN1cnXUPstwhjWTh29Yr3KJQcU\nAKoWAqcE8Obc6Uc1RvevKVLbMDf9EoH7141K0mD21K2X/NSuUsC9iHwB3MLtRcrM\nlROenjaau2JSWesnWu5RSAntcb+iEsNsmBYQOQBWZ6vuWecJnINpdtCmq4Wq4wf6\ne55wHJNWtmuFqds/xyBp17VytepE/oiRYiaw4J/ftQKBgQD7We1VB/D02DsbwM2R\n2Kj5WIUs3L37X00F9JzVB2wVeMtsVimD7Iq7yufPd5SVOWnr5b204pW7xzZrF90a\nf2+xm83W7ILlmne0xzF64sixWCyOFPEF3tsPqzZETF5xrKMTzs7q53KG6dbMGGvF\nGS9UBu/oK2S00DE3XmfpgA4DpQKBgQC8cb4tgXf1JDfDKQ8E1Kj1Azlxx+j4ZGTs\nf+QpkYRzj9I1gc1UZyIv5QbnGqFXC5bxpMRQ8tZImpTuc8EUF8UR2h26XRCVnN2r\n8tQfUQoY68z+6EokVADdVkaGBL239G0QlvYsS1H41PVH8nnUsg9Np/bHrg7KXarM\nZdBnqGTujQKBgFKYmoT2txe+dq4IDYV/zQcjL6Auab/Q8V6jo2XdqobjyvUu2zWe\n5XgQlVx3zzu6QjRiqpRmYQ3zyM4oaV/rwKh8qoeV8O3CdNPTIU9gdtLQRtPpzcpA\nEXx0psCK1/5C3NQFgblvlRMAhLVM0R1TyVmzbeK9X7qLL6EiRMNWcUSBAoGBAK/A\nmbGRVZLx03wWWCaWPHo/Jp1i6Hp6D9KvONo4GMM6+L/krt8wTSdEQJrcMGuhqIb4\nuAwTYB1Y5tw6Y3Jc9PTAbAd7ctNG+Uu8b3BBwdwaWBfKCBQ3sJK+O4oU8+iUdAAL\n+8619N7Rp24RzOS9qR4xMC1tveepUnnN34A+AtylAoGBAMem2LCC2KLFEpJpDt8+\nJYVtLVL26QA4NW8YB5vDb1KzjrdPvVAZE3AVfWbVyruoqvH8oimc195wXAVVuJ7d\njTdWrywyEnedk3laUrpgPyjKq6ICQuSemS2cWB4QWYu3LV8Q16FOuCbf1yBaGlWY\n6m3kNhP6JvybzgRipx6iP+9y\n-----END PRIVATE KEY-----\n",
+  "client_email": "admin-640@proyecto-software-en-la-nube.iam.gserviceaccount.com",
+  "client_id": "105588916592868441973",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/admin-640%40proyecto-software-en-la-nube.iam.gserviceaccount.com"
+}
