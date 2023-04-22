@@ -8,7 +8,7 @@ import requests
 
 
 # celery = Celery('tasks', broker="redis://redis:6379/0")
-celery = Celery('tasks', broker="redis://:redisultramegasecurepassword@10.142.0.2:6379")
+celery = Celery('tasks', broker="redis://:redisultramegasecurepassword@35.185.127.60:6379")
 
 
 FILE_PATH = '/conversion_api/files/'
@@ -28,15 +28,15 @@ def process_files(task):
     if format_to_convert == 'tarbz2' or format_to_convert == 'tar.bz2' or format_to_convert == 'bz2':
         convert_to_bz2(origin_file)
         print('hola')
-        x = requests.get('http://localhost:5500/api/process/'+task['id'])
+        x = requests.get('http://localhost:5000/api/process/'+task['id'])
         print(x.status_code)
     elif format_to_convert == 'zip':
         convert_to_zip(origin_file)
-        x = requests.get('http://localhost:5500/api/process/'+task['id'])
+        x = requests.get('http://localhost:5000/api/process/'+task['id'])
         print(x.status_code)
     elif format_to_convert == 'tar.gz' or format_to_convert == 'gz' or format_to_convert == 'targz':
         convert_to_gz(origin_file)
-        x = requests.get('http://localhost:5500/api/process/'+task['id'])
+        x = requests.get('http://localhost:5000/api/process/'+task['id'])
         print(x.status_code)
     else:
         print('not supported format?')
@@ -61,7 +61,7 @@ def convert_to_gz(filename):
     try:
         f = open(filename, "rb")
     except IOError as e:
-        print(e.errno, e.message)
+        print(e.errno, e)
     else:
         data = f.read()
         f.close()
