@@ -8,7 +8,7 @@ import sqlalchemy
 from google.oauth2 import service_account
 from google.cloud.sql.connector import Connector, IPTypes
 
-credential_path = "C:/MAESTRIA/COMPUTACION EN LA NUBE/Proyecto/SoftwareNube/conversion_api/google/proyecto-software-en-la-nube-554f92ee7998.json"
+credential_path = "/home/juliethquinchia/SoftwareNube/conversion_api/google/proyecto-software-en-la-nube-554f92ee7998.json"
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
 
 def getconn():
