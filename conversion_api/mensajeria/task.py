@@ -5,7 +5,7 @@ from zipfile import ZipFile
 import bz2, gzip
 import os, sys
 import requests
-
+import re
 
 # celery = Celery('tasks', broker="redis://redis:6379/0")
 celery = Celery('tasks', broker="redis://:redisultramegasecurepassword@10.0.0.2:6379")
@@ -34,6 +34,8 @@ def process_files(task):
         x = requests.get('http://127.0.0.1:80/api/process/'+task['id'])
         print(x.status_code)
     elif format_to_convert == 'zip':
+        origin_file =  '../../../../nfs/general/' + origin_file
+        origin_file = re.sub(r'\\\\', r'\\', origin_file)
         convert_to_zip(origin_file)
         x = requests.get('http://127.0.0.1:80/api/process/'+task['id'])
         print(x.status_code)

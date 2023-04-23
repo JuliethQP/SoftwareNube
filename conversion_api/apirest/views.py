@@ -91,7 +91,7 @@ class VistaConvertionTask(Resource):
             # file_path = os.getcwd() + 'http://10.0.0.6:/var/nfs/general/' + file_name
             file_path =  '../../../../nfs/general/' + file_name
             file_path = re.sub(r'\\\\', r'\\', file_path)
-            print('--------file_path-----',file_path)
+           
             uploaded_file.save(file_path)
 
             if new_format == 'tar.gz' or new_format == 'targz':
