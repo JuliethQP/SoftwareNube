@@ -176,7 +176,7 @@ class VistaTask(Resource):
         
 class VistaFile(Resource):
     #Endpoint para la consulta de archivos originales (0) y procesados (1)
-    @jwt_required()
+    # @jwt_required()
     def get(self, filename, type):
         try:
             if type != 0 and type != 1:
