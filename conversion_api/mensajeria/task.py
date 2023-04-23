@@ -8,7 +8,7 @@ import requests
 
 
 # celery = Celery('tasks', broker="redis://redis:6379/0")
-celery = Celery('tasks', broker="redis://:redisultramegasecurepassword@35.185.127.60:6379")
+celery = Celery('tasks', broker="redis://:redisultramegasecurepassword@10.0.0.2:6379")
 
 
 FILE_PATH = '/conversion_api/files/'
