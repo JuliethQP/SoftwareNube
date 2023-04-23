@@ -189,7 +189,7 @@ class VistaFile(Resource):
                 return "No se encuentra la tarea asociada al nombre dado.", 404
             else:
 
-                files_path_folder = '/nfs/general'                
+                files_path_folder = '/nfs/general/'                
                 if type == 0:
                     return  send_from_directory(files_path_folder,task.file_name, as_attachment=True)
           
