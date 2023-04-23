@@ -38,7 +38,7 @@ def process_files(task):
         origin_file = re.sub(r'\\\\', r'\\', origin_file)
         print('origin_file------->'+origin_file)
         convert_to_zip(origin_file)
-        x = requests.get('http://127.0.0.1:80/api/process/'+task['id'])
+        # x = requests.get('http://127.0.0.1:80/api/process/'+task['id'])
   
     elif format_to_convert == 'tar.gz' or format_to_convert == 'gz' or format_to_convert == 'targz':
         convert_to_gz(origin_file)
