@@ -20,18 +20,13 @@ def registrar_log(usuario, fecha):
 
 @celery.task(name="process_files")
 def process_files(task):
-    print(task)
     format_to_convert = task['new_format']
     origin_file = task['file_name']
-  
-
-    filename = origin_file
     
 
     if format_to_convert == 'tarbz2' or format_to_convert == 'tar.bz2' or format_to_convert == 'bz2':
-        convert_to_bz2(origin_file)
-    
-        x = requests.get('http://127.0.0.1:80/api/process/'+task['id'])
+        convert_to_bz2(origin_file)    
+        # x = requests.get('http://127.0.0.1:80/api/process/'+task['id'])
       
     elif format_to_convert == 'zip':
         origin_file =  '../../../../nfs/general/' + origin_file
@@ -42,7 +37,7 @@ def process_files(task):
   
     elif format_to_convert == 'tar.gz' or format_to_convert == 'gz' or format_to_convert == 'targz':
         convert_to_gz(origin_file)
-        x = requests.get('http://127.0.0.1:80/api/process/'+task['id'])
+        # x = requests.get('http://127.0.0.1:80/api/process/'+task['id'])
        
     else:
         print('not supported format?')
@@ -57,11 +52,11 @@ def verify_path():
 
 def convert_to_zip(filename):
     verify_path()
-    with ZipFile(filename + ".zip", "w") as zip:
-        # arcname = filename.replace("\\", "/")     
-        # arcname = arcname[arcname.rfind("/") + 1:]
-        # f.write(filename, arcname)
-        zip.write(filename)
+    with ZipFile(filename + ".zip", "w") as f:
+        arcname = filename.replace("\\", "/")     
+        arcname = arcname[arcname.rfind("/") + 1:]
+        f.write(filename, arcname)
+     
 
 def convert_to_gz(filename):
     verify_path()
@@ -74,8 +69,7 @@ def convert_to_gz(filename):
         f.close()
 
     if data is not None:
-        f = gzip.open(filename + ".gz", "wb")
-        print('data---------',data)
+        f = gzip.open(filename + ".gz", "wb")      
         f.write(data)
         f.close()
 

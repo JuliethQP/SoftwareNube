@@ -88,7 +88,7 @@ class VistaConvertionTask(Resource):
         if origin_format == new_format:
             return {'mensaje':'El formato origen y destino son el mismo, no se realizará ningun proceso de conversión dado el escenario expuesto.'}, 200
         elif new_format in valid_formats:
-            # file_path = os.getcwd() + 'http://10.0.0.6:/var/nfs/general/' + file_name
+    
             file_path =  '../../../../nfs/general/' + file_name
             file_path = re.sub(r'\\\\', r'\\', file_path)
            
@@ -123,7 +123,7 @@ class VistaProcesarArchivos(Resource):
 class VistaProcesarArchivo(Resource):
     def get(self, id_task):
         task = Task.query.get_or_404(id_task)
-        file_path_processed = os.getcwd() + '/files/' + task.file_name + '.' + task.new_format
+        file_path_processed ='../../../../nfs/general/'  + task.file_name + '.' + task.new_format
 
         if os.path.exists(file_path_processed):
             task.status = 1
@@ -152,8 +152,8 @@ class VistaTask(Resource):
             if task.status != 1:
                 return "La tarea con el id dado no se encuentra finalizada, no procede la eliminación.", 400
             
-            file_path_origin = os.getcwd() + '/files/' + task.file_name
-            file_path_processed = os.getcwd() + '/files/' + task.file_name + '.' + task.new_format
+            file_path_origin ='../../../../nfs/general/' + task.file_name
+            file_path_processed ='../../../../nfs/general/' + task.file_name + '.' + task.new_format
 
             if os.path.exists(file_path_origin) and os.path.exists(file_path_processed):
                 os.remove(file_path_origin)
@@ -188,7 +188,7 @@ class VistaFile(Resource):
                 return "No se encuentra la tarea asociada al nombre dado.", 404
             else:
 
-                files_path_folder = os.getcwd() + '/files/'
+                files_path_folder = '../../../../nfs/general/'
                 
                 if type == 0:
                     return send_from_directory(files_path_folder, task.file_name, as_attachment=True)
