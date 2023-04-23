@@ -1,4 +1,4 @@
-from flask import request, flash, jsonify, send_from_directory
+from flask import request, flash, jsonify, send_from_directory,send_file
 from .models import db, UsuarioSchema, Usuario, Task, TaskSchema
 from mensajeria import process_files
 
@@ -189,10 +189,11 @@ class VistaFile(Resource):
                 return "No se encuentra la tarea asociada al nombre dado.", 404
             else:
 
-                files_path_folder = '../../../../nfs/general/'
+                files_path_folder = '../../../../nfs/general/' + task.file_name
                 print('--------task.file_name--------',task.file_name)
                 if type == 0:
-                    return send_from_directory(files_path_folder, task.file_name)
+                    return  send_file(files_path_folder,as_attachment=True)
+                    # return send_from_directory(files_path_folder, task.file_name)
                     # return send_from_directory(files_path_folder, task.file_name, as_attachment=True)
                 else:
                     return send_from_directory(files_path_folder, task.file_name + '.' + task.new_format, as_attachment=True)
