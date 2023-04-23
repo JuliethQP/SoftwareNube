@@ -176,7 +176,7 @@ class VistaTask(Resource):
         
 class VistaFile(Resource):
     #Endpoint para la consulta de archivos originales (0) y procesados (1)
-    # @jwt_required()
+    @jwt_required()
     def get(self, filename, type):
         try:
             if type != 0 and type != 1:
@@ -198,4 +198,5 @@ class VistaFile(Resource):
                     return send_from_directory(files_path_folder, task.file_name + '.' + task.new_format, as_attachment=True)
 
         except Exception as ex:
+            print(ex)
             return str(ex), 500
