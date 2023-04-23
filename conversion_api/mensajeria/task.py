@@ -25,10 +25,11 @@ def process_files(task):
     origin_file = task['file_name']
 
     filename = origin_file
+    print('-----------origin_file-------------',origin_file)
 
     if format_to_convert == 'tarbz2' or format_to_convert == 'tar.bz2' or format_to_convert == 'bz2':
         convert_to_bz2(origin_file)
-        print('hola')
+    
         x = requests.get('http://127.0.0.1:80/api/process/'+task['id'])
         print(x.status_code)
     elif format_to_convert == 'zip':
