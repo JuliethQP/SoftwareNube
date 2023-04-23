@@ -20,6 +20,7 @@ def registrar_log(usuario, fecha):
 
 @celery.task(name="process_files")
 def process_files(task):
+    print(task)
     format_to_convert = task['new_format']
     origin_file = task['file_name']
 
