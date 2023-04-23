@@ -200,10 +200,10 @@ class VistaFile(Resource):
                 if type == 0:
                     print('---entro por acá----')
                     print('nombre archivo',task.file_name)
-                    return  send_from_directory(files_path_folder , task.file_name, as_attachment=True)
+                    return  send_from_directory(files_path_folder , filename, as_attachment=True)
           
                 else:
-                    return send_from_directory(files_path_folder, task.file_name + '.' + task.new_format, as_attachment=True)
+                    return send_from_directory(files_path_folder, filename + '.' + task.new_format, as_attachment=True)
 
         except Exception as ex:
             print(ex)
