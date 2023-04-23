@@ -181,8 +181,9 @@ class VistaFile(Resource):
         try:
             if type != 0 and type != 1:
                 return "Opción errónea de tipo de archivo a obtener (Original --> 0 - Procesado --> 1).", 404
-
+            
             task = Task.query.filter(Task.file_name == filename).first()
+            print('task---------',task)
             
             if task is None:
                 return "No se encuentra la tarea asociada al nombre dado.", 404
