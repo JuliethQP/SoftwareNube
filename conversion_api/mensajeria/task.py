@@ -11,7 +11,7 @@ import requests
 celery = Celery('tasks', broker="redis://:redisultramegasecurepassword@10.0.0.2:6379")
 
 
-FILE_PATH = '/conversion_api/files/'
+FILE_PATH = '../../../../nfs/general/'
 
 @celery.task(name="registrar_log")
 def registrar_log(usuario, fecha):
@@ -45,7 +45,7 @@ def verify_path():
     if 'files' in os.getcwd():
         print(os.getcwd())
     else:
-        file_path = os.getcwd() + '/files/'
+        file_path = '../../../../nfs/general/' 
         os.chdir(file_path)
     print(os.getcwd())
 
