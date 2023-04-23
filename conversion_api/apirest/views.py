@@ -89,7 +89,7 @@ class VistaConvertionTask(Resource):
             return {'mensaje':'El formato origen y destino son el mismo, no se realizará ningun proceso de conversión dado el escenario expuesto.'}, 200
         elif new_format in valid_formats:
     
-            file_path =  '/nfs/general/' + file_name
+            file_path =  '../../../../nfs/general/' + file_name
             file_path = re.sub(r'\\\\', r'\\', file_path)
            
             uploaded_file.save(file_path)
