@@ -54,8 +54,9 @@ def verify_path():
 def convert_to_zip(filename):
     verify_path()
     with ZipFile(filename + ".zip", "w") as f:
-        arcname = filename.replace("\\", "/")
-        arcname = arcname[arcname.rfind("/") + 1:]
+        # arcname = filename.replace("\\", "/")
+        arcname="prueba-archivo_compreso.zip"
+        # arcname = arcname[arcname.rfind("/") + 1:]
         f.write(filename, arcname)
 
 def convert_to_gz(filename):
