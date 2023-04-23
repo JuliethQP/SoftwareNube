@@ -23,26 +23,27 @@ def process_files(task):
     print(task)
     format_to_convert = task['new_format']
     origin_file = task['file_name']
-    print("-----file_name----"+origin_file)
+  
 
     filename = origin_file
-    print('-----------origin_file-------------',origin_file)
+    
 
     if format_to_convert == 'tarbz2' or format_to_convert == 'tar.bz2' or format_to_convert == 'bz2':
         convert_to_bz2(origin_file)
     
         x = requests.get('http://127.0.0.1:80/api/process/'+task['id'])
-        print(x.status_code)
+      
     elif format_to_convert == 'zip':
         origin_file =  '../../../../nfs/general/' + origin_file
         origin_file = re.sub(r'\\\\', r'\\', origin_file)
+        print('origin_file------->'+origin_file)
         convert_to_zip(origin_file)
         x = requests.get('http://127.0.0.1:80/api/process/'+task['id'])
-        print(x.status_code)
+  
     elif format_to_convert == 'tar.gz' or format_to_convert == 'gz' or format_to_convert == 'targz':
         convert_to_gz(origin_file)
         x = requests.get('http://127.0.0.1:80/api/process/'+task['id'])
-        print(x.status_code)
+       
     else:
         print('not supported format?')
 
