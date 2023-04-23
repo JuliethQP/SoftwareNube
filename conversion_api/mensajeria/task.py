@@ -23,6 +23,7 @@ def process_files(task):
     print(task)
     format_to_convert = task['new_format']
     origin_file = task['file_name']
+    print("-----file_name----"+origin_file)
 
     filename = origin_file
     print('-----------origin_file-------------',origin_file)
