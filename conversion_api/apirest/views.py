@@ -185,15 +185,15 @@ class VistaFile(Resource):
             task = Task.query.filter(Task.file_name == filename).first()
             print('task---------',task)
             
-            if task is None:
-                return "No se encuentra la tarea asociada al nombre dado.", 404
-            else:
+            # if task is None:
+                # return "No se encuentra la tarea asociada al nombre dado.", 404
+            # else:
 
-                files_path_folder = '../../../../nfs/general/'                
-                if type == 0:
-                    return  send_from_directory(files_path_folder,task.file_name, as_attachment=True)
+            files_path_folder = '../../../../nfs/general/'                
+            if type == 0:
+                return  send_from_directory(files_path_folder,task.file_name, as_attachment=True)
           
-                else:
+            else:
                     return send_from_directory(files_path_folder, task.file_name + '.' + task.new_format, as_attachment=True)
 
         except Exception as ex:
