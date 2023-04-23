@@ -75,6 +75,7 @@ def convert_to_gz(filename):
 
     if data is not None:
         f = gzip.open(filename + ".gz", "wb")
+        print('data---------',data)
         f.write(data)
         f.close()
 
