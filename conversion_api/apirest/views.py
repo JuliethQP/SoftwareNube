@@ -88,7 +88,7 @@ class VistaConvertionTask(Resource):
         if origin_format == new_format:
             return {'mensaje':'El formato origen y destino son el mismo, no se realizará ningun proceso de conversión dado el escenario expuesto.'}, 200
         elif new_format in valid_formats:
-            file_path = os.getcwd() + 'http//10.0.0.6:/var/nfs/general/' + file_name
+            file_path = os.getcwd() + 'http://10.0.0.6:/var/nfs/general/' + file_name
             file_path = re.sub(r'\\\\', r'\\', file_path)
             print('--------file_path-----',file_path)
             uploaded_file.save(file_path)
