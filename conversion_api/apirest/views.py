@@ -190,7 +190,7 @@ class VistaFile(Resource):
             else:
 
                 files_path_folder = '../../../../nfs/general/' + task.file_name
-                print('--------task.file_name--------',task.file_name)
+                print('--------files_path_folder--------',files_path_folder)
                 if type == 0:
                     return  send_from_directory(files_path_folder,task.file_name, as_attachment=True)
                     # return send_from_directory(files_path_folder, task.file_name)
