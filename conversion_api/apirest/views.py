@@ -189,9 +189,17 @@ class VistaFile(Resource):
                 return "No se encuentra la tarea asociada al nombre dado.", 404
             else:
 
-                files_path_folder = '/nfs/general/'                
+                files_path_folder = '/nfs/general/'    
+                print('------files_path_folder-----------')      
+                
+                if os.path.exists(files_path_folder):
+                    print("----La ruta existe---")
+                else:
+                    print("---La ruta no existe---")      
+                    
                 if type == 0:
-                    return  send_from_directory(files_path_folder,task.file_name, as_attachment=True)
+                    print('---entro por acá----')
+                    return  send_from_directory(files_path_folder , task.file_name, as_attachment=True)
           
                 else:
                     return send_from_directory(files_path_folder, task.file_name + '.' + task.new_format, as_attachment=True)
