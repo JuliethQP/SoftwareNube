@@ -11,7 +11,7 @@ import re
 celery = Celery('tasks', broker="redis://:redisultramegasecurepassword@10.0.0.2:6379")
 
 
-FILE_PATH = '../../../../nfs/general/'
+FILE_PATH = '/nfs/general/'
 
 @celery.task(name="registrar_log")
 def registrar_log(usuario, fecha):
@@ -30,7 +30,7 @@ def process_files(task):
       
     elif format_to_convert == 'zip':
         origin_file =  '../../../../nfs/general/' + origin_file
-        # origin_file = re.sub(r'\\\\', r'\\', origin_file)     
+        origin_file = re.sub(r'\\\\', r'\\', origin_file)     
         convert_to_zip(origin_file)
         # x = requests.get('http://127.0.0.1:80/api/process/'+task['id'])
   
@@ -51,8 +51,7 @@ def verify_path():
 
 def convert_to_zip(filename):
     verify_path()
-    with ZipFile(filename + ".zip", "w") as f:
-       
+    with ZipFile(filename + ".zip", "w") as f:       
         arcname = filename.replace("\\", "/")     
         arcname = arcname[arcname.rfind("/") + 1:]
         f.write(filename, arcname)
