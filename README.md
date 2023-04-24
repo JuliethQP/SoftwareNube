@@ -1,4 +1,4 @@
-## PARA EJECUTAR LA APP EN DOCKER
+### PARA EJECUTAR LA APP EN DOCKER
 En la raíz del proyecto
 ```
 docker-compose up -d
@@ -26,9 +26,26 @@ En la raíz del proyecto
 ```
 docker compose down
 ```
-## Levantar la cola de mensajeria
+### PARA EJECUTAR EN GOOGLE CLOUD
+Es necesario conectarse a la consola ssh de cada una de las maquinas virtuales
+## Levantar celery en google cloud 
 En la raíz del proyecto en otra consola 
 ```
-venv\Scripts\activate
-celery -A conversion_api.mensajeria.task worker -l info
+sudo su
+cd SoftwareNube/conversion_api
+source lab-celery/bin/activate
+celery -A mensajeria.task worker -l info
+```
+## Levantar redis en google cloud 
+```
+sudo su
+cd SoftwareNube/redis
+redis-server ./redis.conf 
+```
+## Levantar la aplicación de flask en google 
+```
+sudo su
+cd SoftwareNube/conversion_api
+source venv/bin/activate 
+flask run --port 80 --host 0.0.0.0 
 ```
