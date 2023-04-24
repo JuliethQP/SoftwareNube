@@ -1,4 +1,4 @@
-## PARA EJECUTAR LA APP EN DOCKER
+### PARA EJECUTAR LA APP EN DOCKER
 En la raíz del proyecto
 ```
 docker-compose up -d
@@ -26,6 +26,8 @@ En la raíz del proyecto
 ```
 docker compose down
 ```
+### PARA EJECUTAR EN GOOGLE CLOUD
+Es necesario conectarse a la consola ssh de cada una de las maquinas virtuales
 ## Levantar celery en google cloud 
 En la raíz del proyecto en otra consola 
 ```
