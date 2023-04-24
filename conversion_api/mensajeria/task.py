@@ -30,7 +30,7 @@ def process_files(task):
       
     elif format_to_convert == 'zip':
         origin_file =  '../../../../nfs/general/' + origin_file
-        origin_file = re.sub(r'\\\\', r'\\', origin_file)     
+        # origin_file = re.sub(r'\\\\', r'\\', origin_file)     
         convert_to_zip(origin_file)
         # x = requests.get('http://127.0.0.1:80/api/process/'+task['id'])
   
@@ -52,7 +52,7 @@ def verify_path():
 def convert_to_zip(filename):
     verify_path()
     with ZipFile(filename + ".zip", "w") as f:
-        print('-----------filename',filename)
+       
         arcname = filename.replace("\\", "/")     
         arcname = arcname[arcname.rfind("/") + 1:]
         f.write(filename, arcname)
