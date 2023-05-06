@@ -13,6 +13,8 @@ celery = Celery('tasks', broker="redis://:redisultramegasecurepassword@10.0.0.2:
 
 FILE_PATH = '/nfs/general/'
 
+puerto = os.environ.get('URL_MAQUINA_VIRTUAL')
+
 @celery.task(name="registrar_log")
 def registrar_log(usuario, fecha):
     with open('conversion_api/mensajeria/log_signin.txt','a+') as file:
@@ -26,17 +28,17 @@ def process_files(task):
 
     if format_to_convert == 'tarbz2' or format_to_convert == 'tar.bz2' or format_to_convert == 'bz2':
         convert_to_bz2(origin_file)    
-        x = requests.get('http://34.148.1.241:80/api/process/'+task['id'])
+        x = requests.get(puerto+'/api/process/'+task['id'])
       
     elif format_to_convert == 'zip':
         origin_file =  '/nfs/general/' + origin_file
         origin_file = re.sub(r'\\\\', r'\\', origin_file)     
         convert_to_zip(origin_file)
-        x = requests.get('http://34.148.1.241:80/api/process/'+task['id'])
+        x = requests.get(puerto +'/api/process/'+task['id'])
   
     elif format_to_convert == 'tar.gz' or format_to_convert == 'gz' or format_to_convert == 'targz':
         convert_to_gz(origin_file)
-        x = requests.get('http://34.148.1.241:80/api/process/'+task['id'])
+        x = requests.get(puerto+'/api/process/'+task['id'])
        
     else:
         print('not supported format?')
