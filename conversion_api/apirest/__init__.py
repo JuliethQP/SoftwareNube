@@ -37,5 +37,5 @@ def create_app(config_name):
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=1)
     puerto = os.environ.get('URL_MAQUINA_VIRTUAL')
     print('---el puerto es',puerto)
-    print('---Inicio')
+    print('---Inicio API')
     return app
