@@ -51,7 +51,7 @@ def process_files(task):
 
 def upload_file(filename):
     blob = bucket.blob(filename)
-    blob.upload_from_file(filename)
+    blob.upload_from_filename(filename)
 
 def verify_path():
     if 'files' in os.getcwd():
