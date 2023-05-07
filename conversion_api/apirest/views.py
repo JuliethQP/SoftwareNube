@@ -130,8 +130,9 @@ class VistaProcesarArchivos(Resource):
 class VistaProcesarArchivo(Resource):
     def get(self, id_task):
         task = Task.query.get_or_404(id_task)
-        file_path_processed ='../../../../nfs/general/'  + task.file_name + '.' + task.new_format
-
+        file_path_processed =task.file_name + '.' + task.new_format
+        blob = bucket.blob(file_path_processed)
+        blob.download_to_filename(file_path_processed)
         if os.path.exists(file_path_processed):
             task.status = 1
             db.session.add(task)
