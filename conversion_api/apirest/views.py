@@ -7,10 +7,14 @@ from flask_jwt_extended import jwt_required, create_access_token
 from datetime import datetime
 from werkzeug.utils import secure_filename
 import re
-
 import os
-
 import hashlib
+from google.cloud import storage
+
+
+client = storage.Client.from_service_account_json('/home/juliethquinchia/proyecto-software-en-la-nube-4692a4693e31.json')
+bucket = client.bucket('bucket-flask-app')
+
 
 usuario_schema = UsuarioSchema()
 task_schema = TaskSchema()
@@ -92,7 +96,10 @@ class VistaConvertionTask(Resource):
             file_path =  '../../../../nfs/general/' + file_name
             file_path = re.sub(r'\\\\', r'\\', file_path)
            
-            uploaded_file.save(file_path)
+            #uploaded_file.save(file_path)
+            blob = bucket.blob(uploaded_file)
+            blob.upload_from_filename(file_name)             
+      
 
             if new_format == 'tar.gz' or new_format == 'targz':
                 new_format = 'gz'

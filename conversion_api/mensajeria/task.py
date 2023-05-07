@@ -7,8 +7,13 @@ import os, sys
 import requests
 import re
 
+from google.cloud import storage
+
 # celery = Celery('tasks', broker="redis://redis:6379/0")
 celery = Celery('tasks', broker="redis://:redisultramegasecurepassword@10.0.0.37:6379/0")
+
+client = storage.Client.from_service_account_json('/home/juliethquinchia/proyecto-software-en-la-nube-4692a4693e31.json')
+bucket = client.bucket('bucket-flask-app')
 
 
 FILE_PATH = '/nfs/general/'
@@ -31,8 +36,11 @@ def process_files(task):
         x = requests.get('/api/process/'+task['id'])
       
     elif format_to_convert == 'zip':
+        
         origin_file =  '/nfs/general/' + origin_file
-        origin_file = re.sub(r'\\\\', r'\\', origin_file)     
+    
+        origin_file = re.sub(r'\\\\', r'\\', origin_file)    
+    
         convert_to_zip(origin_file)
         x = requests.get('/api/process/'+task['id'])
   
