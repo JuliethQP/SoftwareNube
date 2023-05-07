@@ -18,7 +18,7 @@ bucket = client.bucket('bucket-flask-app')
 
 FILE_PATH = '/nfs/general/'
 
-puerto = os.environ.get('URL_MAQUINA_VIRTUAL')
+puerto = os.environ.get('URL_BALANCEADOR_DE_CARGA')
 
 @celery.task(name="registrar_log")
 def registrar_log(usuario, fecha):
@@ -30,21 +30,21 @@ def process_files(task):
     format_to_convert = task['new_format']
     origin_file = task['file_name']
     
-    print('/api/process/'+task['id'])
+    print(puerto+'/api/process/'+task['id'])
     blob = bucket.blob(origin_file)
     blob.download_to_filename(origin_file)
     
     if format_to_convert == 'tarbz2' or format_to_convert == 'tar.bz2' or format_to_convert == 'bz2':
         convert_to_bz2(origin_file)    
-        x = requests.get('/api/process/'+task['id'])
+        x = requests.get(puerto+'/api/process/'+task['id'])
       
     elif format_to_convert == 'zip':
         convert_to_zip(origin_file)
-        x = requests.get('/api/process/'+task['id'])
+        x = requests.get(puerto+'/api/process/'+task['id'])
   
     elif format_to_convert == 'tar.gz' or format_to_convert == 'gz' or format_to_convert == 'targz':
         convert_to_gz(origin_file)
-        x = requests.get('/api/process/'+task['id'])
+        x = requests.get(puerto+'/api/process/'+task['id'])
        
     else:
         print('not supported format?')
