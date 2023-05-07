@@ -31,16 +31,14 @@ def process_files(task):
     origin_file = task['file_name']
     
     print('/api/process/'+task['id'])
+    blob = bucket.blob(origin_file)
+    blob.download_to_filename(origin_file)
+    
     if format_to_convert == 'tarbz2' or format_to_convert == 'tar.bz2' or format_to_convert == 'bz2':
         convert_to_bz2(origin_file)    
         x = requests.get('/api/process/'+task['id'])
       
     elif format_to_convert == 'zip':
-        
-        origin_file =  '/nfs/general/' + origin_file
-    
-        origin_file = re.sub(r'\\\\', r'\\', origin_file)    
-    
         convert_to_zip(origin_file)
         x = requests.get('/api/process/'+task['id'])
   
@@ -51,6 +49,10 @@ def process_files(task):
     else:
         print('not supported format?')
 
+def upload_file(filename):
+    blob = bucket.blob(filename)
+    blob.upload_from_file(filename)
+
 def verify_path():
     if 'files' in os.getcwd():
         print(os.getcwd())
@@ -60,15 +62,15 @@ def verify_path():
     print(os.getcwd())
 
 def convert_to_zip(filename):
-    verify_path()
     with ZipFile(filename + ".zip", "w") as f:       
         arcname = filename.replace("\\", "/")     
         arcname = arcname[arcname.rfind("/") + 1:]
         f.write(filename, arcname)
+        
+        upload_file(filename + ".zip")
      
 
 def convert_to_gz(filename):
-    verify_path()
     try:
         f = open(filename, "rb")
     except IOError as e:
@@ -80,15 +82,17 @@ def convert_to_gz(filename):
     if data is not None:
         f = gzip.open(filename + ".gz", "wb")      
         f.write(data)
+        upload_file(filename + ".gz")
         f.close()
 
 def convert_to_bz2(filename):
-    verify_path()
     print(__file__)
     
     input_file = open(filename, "rb")
     output_file = open(filename + '.bz2', "wb")
     output_file.write(bz2.compress(input_file.read()))
+    
+    upload_file(filename + '.bz2')
 
     output_file.close()
     input_file.close()
