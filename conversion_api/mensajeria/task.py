@@ -10,7 +10,7 @@ import re
 from google.cloud import storage
 
 # celery = Celery('tasks', broker="redis://redis:6379/0")
-celery = Celery('tasks', broker="redis://:redisultramegasecurepassword@10.0.0.37:6379/0")
+celery = Celery('tasks', broker="redis://:redisultramegasecurepassword@34.132.245.83:6379/0")
 
 client = storage.Client.from_service_account_json('/home/juliethquinchia/proyecto-software-en-la-nube-4692a4693e31.json')
 bucket = client.bucket('bucket-flask-app')
