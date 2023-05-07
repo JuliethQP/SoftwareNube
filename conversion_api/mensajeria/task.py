@@ -8,7 +8,7 @@ import requests
 import re
 
 # celery = Celery('tasks', broker="redis://redis:6379/0")
-celery = Celery('tasks', broker="redis://:redisultramegasecurepassword@10.0.0.2:6379/0")
+celery = Celery('tasks', broker="redis://:redisultramegasecurepassword@10.0.0.37:6379/0")
 
 
 FILE_PATH = '/nfs/general/'
