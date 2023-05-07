@@ -25,20 +25,20 @@ def process_files(task):
     format_to_convert = task['new_format']
     origin_file = task['file_name']
     
-
+    print('/api/process/'+task['id'])
     if format_to_convert == 'tarbz2' or format_to_convert == 'tar.bz2' or format_to_convert == 'bz2':
         convert_to_bz2(origin_file)    
-        x = requests.get(puerto+'/api/process/'+task['id'])
+        x = requests.get('/api/process/'+task['id'])
       
     elif format_to_convert == 'zip':
         origin_file =  '/nfs/general/' + origin_file
         origin_file = re.sub(r'\\\\', r'\\', origin_file)     
         convert_to_zip(origin_file)
-        x = requests.get(puerto +'/api/process/'+task['id'])
+        x = requests.get('/api/process/'+task['id'])
   
     elif format_to_convert == 'tar.gz' or format_to_convert == 'gz' or format_to_convert == 'targz':
         convert_to_gz(origin_file)
-        x = requests.get(puerto+'/api/process/'+task['id'])
+        x = requests.get('/api/process/'+task['id'])
        
     else:
         print('not supported format?')
