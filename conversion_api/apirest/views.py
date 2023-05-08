@@ -1,4 +1,4 @@
-from flask import request, flash, jsonify, send_from_directory,send_file
+from flask import request, flash, jsonify, send_from_directory,send_file,make_response
 from .models import db, UsuarioSchema, Usuario, Task, TaskSchema
 from mensajeria import process_files
 
@@ -195,23 +195,22 @@ class VistaFile(Resource):
             
             if task is None:
                 return "No se encuentra la tarea asociada al nombre dado.", 404
-            else:
+            else:    
+                if type == 0:              
+                                      
+                    blob =  bucket.blob(filename)
+                    if blob is None:
+                        return "El archivo no existe en el bucket", 404
 
-                files_path_folder = '/nfs/general/'    
-                print('------files_path_folder-----------')      
-                
-                if os.path.exists(files_path_folder):
-                    print("----La ruta existe---")
-                else:
-                    print("---La ruta no existe---")      
-                    
-                if type == 0:
-                    print('---entro por acá----')
-                    print('nombre archivo',task.file_name)
-                    return  send_from_directory(files_path_folder , filename, as_attachment=True)
+                    blob.download_to_filename(filename)
+                    tipo = blob.content_type
+                    return send_file(filename, as_attachment=True, mimetype=tipo)                
           
                 else:
-                    return send_from_directory(files_path_folder, filename + '.' + task.new_format, as_attachment=True)
+                    blob = bucket.blob(filename+ '.' + task.new_format)
+                    blob.download_to_filename(filename+ '.' + task.new_format)
+                    tipo = blob.content_type
+                    return send_file('',filename + '.' + task.new_format, as_attachment=True, mimetype=tipo)
 
         except Exception as ex:
             print(ex)
