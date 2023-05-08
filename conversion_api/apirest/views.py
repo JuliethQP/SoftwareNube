@@ -98,8 +98,7 @@ class VistaConvertionTask(Resource):
            
             #uploaded_file.save(file_path)
             blob = bucket.blob(file_name)
-            blob.upload_from_file(open(uploaded_file, 'rb'), content_type=uploaded_file.mimetype)
-            #blob.upload_from_file(uploaded_file)             
+            blob.upload_from_file(uploaded_file)             
       
 
             if new_format == 'tar.gz' or new_format == 'targz':
