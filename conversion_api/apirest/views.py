@@ -209,7 +209,7 @@ class VistaFile(Resource):
           
                 else:
                     filedownload = f'{files_path_folder}/{filename}'+ '.' + task.new_format
-                    blob = bucket.blob(filedownload)
+                    blob = bucket.blob(f'{filename}'+ '.' + task.new_format)
                     blob.download_to_filename(filedownload)
                     tipo = blob.content_type
                     return send_file(filedownload, as_attachment=True, mimetype=tipo)
