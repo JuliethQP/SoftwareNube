@@ -48,6 +48,8 @@ def process_files(task):
        
     else:
         print('not supported format?')
+    
+    os.remove(origin_file)
 
 def upload_file(filename):
     blob = bucket.blob(filename)
