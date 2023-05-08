@@ -192,7 +192,7 @@ class VistaFile(Resource):
             
             task = Task.query.filter(Task.file_name == filename).first()
             print('task---------',task)
-            
+            files_path_folder = '/tmp'
             if task is None:
                 return "No se encuentra la tarea asociada al nombre dado.", 404
             else:    
@@ -202,15 +202,17 @@ class VistaFile(Resource):
                     if blob is None:
                         return "El archivo no existe en el bucket", 404
 
-                    blob.download_to_filename(filename)
+                    blob.download_to_filename(f'{files_path_folder}/{filename}')
                     tipo = blob.content_type
-                    return send_file(filename, as_attachment=True, mimetype=tipo)                
+                    
+                    return send_file(f'{files_path_folder}/{filename}', as_attachment=True, mimetype=tipo)                
           
                 else:
-                    blob = bucket.blob(filename+ '.' + task.new_format)
-                    blob.download_to_filename(filename+ '.' + task.new_format)
+                    filedownload = f'{files_path_folder}/{filename}'+ '.' + task.new_format
+                    blob = bucket.blob(filedownload)
+                    blob.download_to_filename(filedownload)
                     tipo = blob.content_type
-                    return send_file('',filename + '.' + task.new_format, as_attachment=True, mimetype=tipo)
+                    return send_file(filedownload, as_attachment=True, mimetype=tipo)
 
         except Exception as ex:
             print(ex)
