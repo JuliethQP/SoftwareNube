@@ -10,6 +10,7 @@ import re
 import os
 import hashlib
 from google.cloud import storage
+import uuid
 
 
 client = storage.Client.from_service_account_json('/home/juliethquinchia/proyecto-software-en-la-nube-4692a4693e31.json')
@@ -84,7 +85,8 @@ class VistaConvertionTask(Resource):
         valid_formats = ['zip', 'tar.gz', 'tar.bz2', 'gz', 'bz2', 'tarbz2', 'targz']
 
         uploaded_file = request.files.get('fileName')
-        file_name =  secure_filename(datetime.now().strftime("%m%d%Y%H%M%S") + '--' + uploaded_file.filename)
+        idUnico=str(uuid.uuid4())
+        file_name =  secure_filename( idUnico + '--'+datetime.now().strftime("%m%d%Y%H%M%S") + '--'  + uploaded_file.filename)
 
         origin_format = uploaded_file.mimetype.split('/')[1]
         new_format = request.form.getlist('newFormat')[0]
