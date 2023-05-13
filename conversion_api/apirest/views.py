@@ -23,7 +23,7 @@ publisher = pubsub_v1.PublisherClient()
 
 topic_path = publisher.topic_path("proyecto-software-en-la-nube", "topic-proyecto-conversor-sub")
 subscriber = pubsub_v1.SubscriberClient()
-subscription_path = subscriber.subscription_path("proyecto-software-en-la-nube", "suscripcion-proyecto-conversor")
+subscription_path = subscriber.subscription_path("proyecto-software-en-la-nube", "suscripcion-proyecto-conversor-001")
 
 
 usuario_schema = UsuarioSchema()
