@@ -29,11 +29,15 @@ google-api-core==2.11.0
 google-auth==2.17.3
 google-auth-oauthlib==1.0.0
 google-cloud-core==2.3.2
+google-cloud-pubsub==2.17.0
 google-cloud-storage==2.9.0
 google-crc32c==1.5.0
 google-resumable-media==2.5.0
 googleapis-common-protos==1.59.0
 greenlet==2.0.2
+grpc-google-iam-v1==0.12.6
+grpcio==1.54.2
+grpcio-status==1.54.2
 idna==3.4
 itsdangerous==2.1.2
 Jinja2==3.1.2
@@ -47,6 +51,7 @@ oauthlib==3.2.2
 packaging==23.0
 pg8000==1.29.4
 prompt-toolkit==3.0.38
+proto-plus==1.22.2
 protobuf==4.22.4
 psycopg2-binary==2.9.5
 pyasn1==0.5.0
