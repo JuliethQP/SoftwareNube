@@ -254,9 +254,13 @@ class VistaFile(Resource):
             return str(ex), 500
         
         finally:
-            ruta = files_path_folder
-            archivo = filename
-            ruta_archivo = os.path.join(ruta, archivo)
-            os.remove(ruta_archivo)
+            if type == 0:
+                ruta = files_path_folder
+                archivo = filename
+                ruta_archivo = os.path.join(ruta, archivo)
+                os.remove(ruta_archivo)
+            else:
+                ruta_archivo = os.path.join(ruta, filedownload)
+                os.remove(ruta_archivo)
 
 
