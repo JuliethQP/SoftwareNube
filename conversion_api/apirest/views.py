@@ -194,19 +194,15 @@ class VistaTask(Resource):
 
             if task.status != 1:
                 return "La tarea con el id dado no se encuentra finalizada, no procede la eliminación.", 400
-
-            file_path_origin = '../../../../nfs/general/' + task.file_name
-            file_path_processed = '../../../../nfs/general/' + \
-                task.file_name + '.' + task.new_format
-
-            if os.path.exists(file_path_origin) and os.path.exists(file_path_processed):
-                os.remove(file_path_origin)
-                os.remove(file_path_processed)
-                db.session.delete(task)
-                db.session.commit()
-                return "Los archivos han sido borrados exitosamente.", 204
-            else:
-                return "No se encuentran los archivos a borrar.", 404
+         
+            blob = bucket.blob(task.file_name)            
+            blob.delete()
+            blob = bucket.blob(task.file_name + '.' + task.new_format)
+            blob.delete()       
+               
+            db.session.delete(task)
+            db.session.commit()
+            return "Los archivos han sido borrados exitosamente.", 204
 
         except Exception as ex:
             return str(ex), 500

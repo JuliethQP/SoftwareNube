@@ -29,9 +29,8 @@ def registrar_log(usuario, fecha):
 def process_files(task):
     
     format_to_convert = task['new_format']
-    origin_file = task['file_name']
-    
-    print(puerto+'/api/process/'+task['id'])
+    origin_file = task['file_name']    
+
     blob = bucket.blob(origin_file)
     blob.download_to_filename(origin_file)
     
