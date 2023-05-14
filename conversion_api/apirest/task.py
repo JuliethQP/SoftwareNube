@@ -72,13 +72,12 @@ def updateTask(filename, newFormat):
     file_path_processed= filename + "." + newFormat
     blob = bucket.blob(file_path_processed)
     if blob.exists:
-        with current_app.app_context():
-            db_uri = current_app.config['SQLALCHEMY_DATABASE_URI']
-            print('-----------uri',db_uri)
-            task = Task.query.filter_by(file_name = filename).all()
-            task.status = 1
-            db.session.add(task)
-            db.session.commit()
+        db_uri = current_app.config['SQLALCHEMY_DATABASE_URI']
+        print('-----------uri',db_uri)
+        task = Task.query.filter_by(file_name = filename).all()
+        task.status = 1
+        db.session.add(task)
+        db.session.commit()
         return True
     else: 
          return False
