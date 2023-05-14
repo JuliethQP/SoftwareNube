@@ -1,6 +1,7 @@
 from apirest import create_app
 from apirest.models import *
 from apirest.views import *
+from apirest.task import *
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
 
