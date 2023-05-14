@@ -23,6 +23,7 @@ subscription_name = "suscripcion-proyecto-conversor-001"
 subscriber = pubsub_v1.SubscriberClient()
 subscription_path = subscriber.subscription_path(project_id, subscription_name)
 
+
 def upload_file(filename):
     blob = bucket.blob(filename)
     blob.upload_from_filename(filename)
@@ -71,8 +72,8 @@ def updateTask(filename, newFormat):
     file_path_processed= filename + "." + newFormat
     blob = bucket.blob(file_path_processed)
     if blob.exists:
-        db_uri = current_app.config['SQLALCHEMY_DATABASE_URI']
-        print('-----------uri',db_uri)
+      
+
         task = Task.query.filter_by(file_name = filename).all()
         task.status = 1
         db.session.add(task)
@@ -81,51 +82,52 @@ def updateTask(filename, newFormat):
     else: 
          return False
 
-while True:
-    pull_request = PullRequest(
-        subscription=subscription_path,
-        max_messages=1)
+def proccessFileTask():
+    while True:
+        pull_request = PullRequest(
+            subscription=subscription_path,
+            max_messages=1)
 
-    response = subscriber.pull(request=pull_request)
-    ack_ids = []
-    nack_ids = []
+        response = subscriber.pull(request=pull_request)
+        ack_ids = []
+        nack_ids = []
 
-    for received_message in response.received_messages:
-        print(f"Mensaje recibido: {received_message.message.data}")
+        for received_message in response.received_messages:
+            print(f"Mensaje recibido: {received_message.message.data}")
 
-        json_data = json.loads(received_message.message.data)
+            json_data = json.loads(received_message.message.data)
 
-        format_to_convert = json_data["new_format"]
-        origin_file = json_data["filename"]
+            format_to_convert = json_data["new_format"]
+            origin_file = json_data["filename"]
+            
+            blob = bucket.blob(origin_file)
+            blob.download_to_filename(f'{origin_file}')
         
-        blob = bucket.blob(origin_file)
-        blob.download_to_filename(f'{origin_file}')
+            if format_to_convert == 'tarbz2' or format_to_convert == 'tar.bz2' or format_to_convert == 'bz2':
+                convert_to_bz2(origin_file)          
+
+            elif format_to_convert == 'zip':
+                convert_to_zip(origin_file)
     
-        if format_to_convert == 'tarbz2' or format_to_convert == 'tar.bz2' or format_to_convert == 'bz2':
-            convert_to_bz2(origin_file)          
+            elif format_to_convert == 'tar.gz' or format_to_convert == 'gz' or format_to_convert == 'targz':
+                convert_to_gz(origin_file)
+        
+            else:
+                print('not supported format?')
 
-        elif format_to_convert == 'zip':
-            convert_to_zip(origin_file)
-  
-        elif format_to_convert == 'tar.gz' or format_to_convert == 'gz' or format_to_convert == 'targz':
-            convert_to_gz(origin_file)
-       
-        else:
-            print('not supported format?')
+            updateResult = updateTask(origin_file, format_to_convert)
+            if updateResult:
+                ack_ids.append(received_message.ack_id)
+            else:
+                nack_ids.append(received_message.ack_id)
 
-        updateResult = updateTask(origin_file, format_to_convert)
-        if updateResult:
-            ack_ids.append(received_message.ack_id)
-        else:
-            nack_ids.append(received_message.ack_id)
+            os.remove(f'{origin_file}')
 
-        os.remove(f'{origin_file}')
+        
+        if ack_ids:
+            subscriber.acknowledge(request={"subscription": subscription_path, "ack_ids": ack_ids})
 
-    
-    if ack_ids:
-        subscriber.acknowledge(request={"subscription": subscription_path, "ack_ids": ack_ids})
-
-    if nack_ids:
-        subscriber.nacknowledge(request={"subscription": subscription_path, "nack_ids": nack_ids})
-    
-    time.sleep(1)
+        if nack_ids:
+            subscriber.nacknowledge(request={"subscription": subscription_path, "nack_ids": nack_ids})
+        
+        time.sleep(1)

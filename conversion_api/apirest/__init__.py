@@ -3,6 +3,7 @@ from datetime import timedelta
 import os
 from google.oauth2 import service_account
 from google.cloud.sql.connector import Connector, IPTypes
+from apirest.task import proccessFileTask
 
 credential_path = "/home/juliethquinchia/proyecto-software-en-la-nube-906bd5b19e9e.json"
 #credential_path = "google/proyecto-software-en-la-nube-906bd5b19e9e.json"
@@ -36,4 +37,6 @@ def create_app(config_name):
         puerto = os.environ.get('URL_MAQUINA_VIRTUAL')
         print('---el puerto es',puerto)
         print('---Inicio API')
+        
+        proccessFileTask()
     return app
