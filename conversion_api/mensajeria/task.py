@@ -70,7 +70,7 @@ def updateTask(filename, newFormat):
     file_path_processed= filename + "." + newFormat
     blob = bucket.blob(file_path_processed)
     if blob.exists:
-        task = Task.query.filer(Task.file_name == filename).first()
+        task = Task.query.filter(Task.file_name == filename).first()
         task.status = 1
         db.session.add(task)
         db.session.commit()
