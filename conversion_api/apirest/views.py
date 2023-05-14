@@ -1,6 +1,6 @@
 from flask import request, flash, jsonify, send_file
 from .models import db, UsuarioSchema, Usuario, Task, TaskSchema
-from mensajeria import process_files
+# from mensajeria import process_files
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, create_access_token
 from datetime import datetime
@@ -146,15 +146,15 @@ class VistaConvertionTask(Resource):
             return {'mensaje': 'Lo sentimos nuestro sistema no soporta dicho formato de conversión'}, 400
 
 
-class VistaProcesarArchivos(Resource):
-    # Funcion para procesar los archivos
-    def get(self):
-        file_for_process = Task.query.filter_by(status=0)
+# class VistaProcesarArchivos(Resource):
+#     # Funcion para procesar los archivos
+#     def get(self):
+#         file_for_process = Task.query.filter_by(status=0)
 
-        for file in file_for_process:
-            process_files.delay(task_schema.dump(file))
+#         for file in file_for_process:
+#             process_files.delay(task_schema.dump(file))
 
-        return str(file_for_process.count()) + ' files be process'
+#         return str(file_for_process.count()) + ' files be process'
 
 
 class VistaProcesarArchivo(Resource):
