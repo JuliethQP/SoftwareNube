@@ -23,14 +23,7 @@ subscription_path = subscriber.subscription_path(project_id, subscription_name)
 def upload_file(filename):
     blob = bucket.blob(filename)
     blob.upload_from_filename(filename)
-
-def verify_path():
-    if 'files' in os.getcwd():
-        print(os.getcwd())
-    else:
-        file_path = '/nfs/general/' 
-        os.chdir(file_path)
-    print(os.getcwd())
+    os.remove(f'{filename}')
 
 def convert_to_zip(filename):
     with ZipFile(filename + ".zip", "w") as f:       
