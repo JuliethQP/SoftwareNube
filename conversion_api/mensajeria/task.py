@@ -81,7 +81,7 @@ def updateTask(filename, newFormat):
 while True:
     pull_request = PullRequest(
         subscription=subscription_path,
-        max_messages=10)
+        max_messages=1)
 
     response = subscriber.pull(request=pull_request)
     ack_ids = []
