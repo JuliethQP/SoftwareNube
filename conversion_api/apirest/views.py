@@ -1,6 +1,5 @@
 from flask import request, flash, jsonify, send_file
 from .models import db, UsuarioSchema, Usuario, Task, TaskSchema
-#from mensajeria import process_files
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, create_access_token
 from datetime import datetime
@@ -13,8 +12,6 @@ import json
 
 client = storage.Client.from_service_account_json(
     '/home/juliethquinchia/proyecto-software-en-la-nube-906bd5b19e9e.json')
-#client = storage.Client.from_service_account_json(
-    #'google/proyecto-software-en-la-nube-906bd5b19e9e.json')
 bucket = client.bucket('bucket-flask-app')
 
 publisher = pubsub_v1.PublisherClient()
@@ -144,33 +141,7 @@ class VistaConvertionTask(Resource):
             return task_schema.dump(nueva_conversion), 202
         else:
             return {'mensaje': 'Lo sentimos nuestro sistema no soporta dicho formato de conversión'}, 400
-
-
-# class VistaProcesarArchivos(Resource):
-#     # Funcion para procesar los archivos
-#     def get(self):
-#         file_for_process = Task.query.filter_by(status=0)
-
-#         for file in file_for_process:
-#             process_files.delay(task_schema.dump(file))
-
-#         return str(file_for_process.count()) + ' files be process'
-
-
-class VistaProcesarArchivo(Resource):
-    def get(self, id_task):
-        task = Task.query.get_or_404(id_task)
-        file_path_processed = task.file_name + '.' + task.new_format
-        blob = bucket.blob(file_path_processed)
-        blob.download_to_filename(file_path_processed)
-        if os.path.exists(file_path_processed):
-            task.status = 1
-            db.session.add(task)
-            db.session.commit()
-            return 'File modify', 200
-        else:
-            return 'File not exists', 404
-
+        
 
 class VistaTask(Resource):
     @jwt_required()
@@ -262,6 +233,3 @@ class VistaFile(Resource):
                     os.remove(ruta_archivo)
                 except Exception as ex:
                      return str(ex), 500
-                    
-
-

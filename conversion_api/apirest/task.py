@@ -1,5 +1,4 @@
 from zipfile import ZipFile
-from flask import current_app
 import bz2, gzip
 import time
 import json
@@ -10,11 +9,7 @@ from google.cloud import storage, pubsub_v1
 from google.cloud.pubsub_v1.types import PullRequest
 
 client = storage.Client.from_service_account_json('/home/juliethquinchia/proyecto-software-en-la-nube-906bd5b19e9e.json')
-#client = storage.Client.from_service_account_json('google/proyecto-software-en-la-nube-906bd5b19e9e.json')
 bucket = client.bucket('bucket-flask-app')
-from flask import current_app
-
-FILE_PATH = '/nfs/general/'
 
 puerto = os.environ.get('URL_BALANCEADOR_DE_CARGA')
 
@@ -74,7 +69,7 @@ def updateTask(filename, newFormat):
     blob = bucket.blob(file_path_processed)    
     if blob.exists:     
         task = Task.query.filter(Task.file_name == filename).first() 
-        print('task--------->',task)
+        print(f'Task id: {task}')
         task.status = 1
         db.session.add(task)
         db.session.commit()

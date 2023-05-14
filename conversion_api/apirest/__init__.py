@@ -1,11 +1,9 @@
 from flask import Flask
 from datetime import timedelta
 import os
-from google.oauth2 import service_account
 from google.cloud.sql.connector import Connector, IPTypes
 
 credential_path = "/home/juliethquinchia/proyecto-software-en-la-nube-906bd5b19e9e.json"
-#credential_path = "google/proyecto-software-en-la-nube-906bd5b19e9e.json"
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
 
 def getconn():
@@ -28,7 +26,6 @@ def create_app(config_name):
         app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql+pg8000://"
         app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
         "creator": getconn}
-        # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///conversion_api.db'
         app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
         app.config['SECRET_KEY'] = 'frase-secreta'
         app.config['PROPAGATE_EXCEPTIONS']=True
