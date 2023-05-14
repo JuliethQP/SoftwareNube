@@ -6,7 +6,7 @@ import os
 
 from google.cloud import storage, pubsub_v1
 from google.cloud.pubsub_v1.types import PullRequest
-from apirest.models import db, Task
+from .models import db, Task
 
 client = storage.Client.from_service_account_json('/home/juliethquinchia/proyecto-software-en-la-nube-906bd5b19e9e.json')
 #client = storage.Client.from_service_account_json('google/proyecto-software-en-la-nube-906bd5b19e9e.json')
