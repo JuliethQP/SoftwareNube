@@ -12,6 +12,7 @@ from google.cloud.pubsub_v1.types import PullRequest
 client = storage.Client.from_service_account_json('/home/juliethquinchia/proyecto-software-en-la-nube-906bd5b19e9e.json')
 #client = storage.Client.from_service_account_json('google/proyecto-software-en-la-nube-906bd5b19e9e.json')
 bucket = client.bucket('bucket-flask-app')
+from flask import current_app
 
 FILE_PATH = '/nfs/general/'
 
@@ -71,6 +72,8 @@ def updateTask(filename, newFormat):
     file_path_processed= filename + "." + newFormat
     blob = bucket.blob(file_path_processed)
     if blob.exists:
+        db_uri = current_app.config['SQLALCHEMY_DATABASE_URI']
+        print('-----------uri',db_uri)
         with current_app.app_context():
             task = Task.query.filter_by(file_name = filename).all()
             task.status = 1
