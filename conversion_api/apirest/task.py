@@ -120,10 +120,11 @@ while True:
 
         os.remove(f'{origin_file}')
 
+    
     if ack_ids:
-        subscriber.acknowledge(subscription_path, ack_ids)
+        subscriber.acknowledge(request={"subscription": subscription_path, "ack_ids": ack_ids})
 
     if nack_ids:
-        subscriber.nacknowledge(subscription_path, nack_ids)
+        subscriber.nacknowledge(request={"subscription": subscription_path, "nack_ids": nack_ids})
     
     time.sleep(1)
