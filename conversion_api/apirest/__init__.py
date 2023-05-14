@@ -24,15 +24,16 @@ def getconn():
 def create_app(config_name):
     app = Flask(__name__)  
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql+pg8000://"
-    app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
-    "creator": getconn}
-    # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///conversion_api.db'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['SECRET_KEY'] = 'frase-secreta'
-    app.config['PROPAGATE_EXCEPTIONS']=True
-    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=1)
-    puerto = os.environ.get('URL_MAQUINA_VIRTUAL')
-    print('---el puerto es',puerto)
-    print('---Inicio API')
+    with app.app_context():
+        app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql+pg8000://"
+        app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+        "creator": getconn}
+        # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///conversion_api.db'
+        app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+        app.config['SECRET_KEY'] = 'frase-secreta'
+        app.config['PROPAGATE_EXCEPTIONS']=True
+        app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=1)
+        puerto = os.environ.get('URL_MAQUINA_VIRTUAL')
+        print('---el puerto es',puerto)
+        print('---Inicio API')
     return app
