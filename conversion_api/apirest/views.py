@@ -1,30 +1,26 @@
-from flask import request, flash, jsonify, send_from_directory, send_file, make_response
+from flask import request, flash, jsonify, send_file
 from .models import db, UsuarioSchema, Usuario, Task, TaskSchema
 from mensajeria import process_files
 from flask_restful import Resource
 from flask_jwt_extended import jwt_required, create_access_token
 from datetime import datetime
 from werkzeug.utils import secure_filename
-import re
 import os
 import hashlib
 from google.cloud import storage, pubsub_v1
 import uuid
 import json
 
-
-
 client = storage.Client.from_service_account_json(
     '/home/juliethquinchia/proyecto-software-en-la-nube-906bd5b19e9e.json')
+#client = storage.Client.from_service_account_json(
+#    'google/proyecto-software-en-la-nube-906bd5b19e9e.json')
 bucket = client.bucket('bucket-flask-app')
 
 publisher = pubsub_v1.PublisherClient()
-
-
 topic_path = publisher.topic_path("proyecto-software-en-la-nube", "topic-proyecto-conversor-sub")
 subscriber = pubsub_v1.SubscriberClient()
 subscription_path = subscriber.subscription_path("proyecto-software-en-la-nube", "suscripcion-proyecto-conversor-001")
-
 
 usuario_schema = UsuarioSchema()
 task_schema = TaskSchema()

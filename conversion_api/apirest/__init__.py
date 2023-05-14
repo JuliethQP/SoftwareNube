@@ -1,14 +1,11 @@
 from flask import Flask
-from flask_marshmallow import Marshmallow
-from flask_sqlalchemy import SQLAlchemy
-import apirest.models
 from datetime import timedelta
 import os
-import sqlalchemy
 from google.oauth2 import service_account
 from google.cloud.sql.connector import Connector, IPTypes
 
 credential_path = "/home/juliethquinchia/proyecto-software-en-la-nube-906bd5b19e9e.json"
+#credential_path = "google/proyecto-software-en-la-nube-906bd5b19e9e.json"
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
 
 def getconn():

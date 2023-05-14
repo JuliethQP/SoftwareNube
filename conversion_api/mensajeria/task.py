@@ -1,55 +1,26 @@
-from celery import Celery
-from datetime import datetime
-
 from zipfile import ZipFile
 import bz2, gzip
-import os, sys
-import requests
-import re
+import time
+import json
+import os
 
-from google.cloud import storage
+from google.cloud import storage, pubsub_v1
+from google.cloud.pubsub_v1.types import PullRequest
+from apirest.models import db, Task
 
-# celery = Celery('tasks', broker="redis://redis:6379/0")
-celery = Celery('tasks', broker="redis://:redisultramegasecurepassword@10.0.0.37:6379/0")
-
-
-
-
+client = storage.Client.from_service_account_json('/home/juliethquinchia/proyecto-software-en-la-nube-906bd5b19e9e.json')
+#client = storage.Client.from_service_account_json('google/proyecto-software-en-la-nube-906bd5b19e9e.json')
+bucket = client.bucket('bucket-flask-app')
 
 FILE_PATH = '/nfs/general/'
 
 puerto = os.environ.get('URL_BALANCEADOR_DE_CARGA')
 
-@celery.task(name="registrar_log")
-def registrar_log(usuario, fecha):
-    with open('conversion_api/mensajeria/log_signin.txt','a+') as file:
-        file.write('{} - Inicio de sesión:{}\n'.format(usuario, fecha))
+project_id = "proyecto-software-en-la-nube"
+subscription_name = "suscripcion-proyecto-conversor-001"
 
-@celery.task(name="process_files")
-def process_files(task):
-    
-    format_to_convert = task['new_format']
-    origin_file = task['file_name']    
-
-    blob = bucket.blob(origin_file)
-    blob.download_to_filename(origin_file)
-    
-    if format_to_convert == 'tarbz2' or format_to_convert == 'tar.bz2' or format_to_convert == 'bz2':
-        convert_to_bz2(origin_file)    
-        x = requests.get(puerto+'/api/process/'+task['id'])
-      
-    elif format_to_convert == 'zip':
-        convert_to_zip(origin_file)
-        x = requests.get(puerto+'/api/process/'+task['id'])
-  
-    elif format_to_convert == 'tar.gz' or format_to_convert == 'gz' or format_to_convert == 'targz':
-        convert_to_gz(origin_file)
-        x = requests.get(puerto+'/api/process/'+task['id'])
-       
-    else:
-        print('not supported format?')
-    
-    os.remove(origin_file)
+subscriber = pubsub_v1.SubscriberClient()
+subscription_path = subscriber.subscription_path(project_id, subscription_name)
 
 def upload_file(filename):
     blob = bucket.blob(filename)
@@ -67,10 +38,8 @@ def convert_to_zip(filename):
     with ZipFile(filename + ".zip", "w") as f:       
         arcname = filename.replace("\\", "/")     
         arcname = arcname[arcname.rfind("/") + 1:]
-        f.write(filename, arcname)
-        
+        f.write(filename, arcname)        
         upload_file(filename + ".zip")
-     
 
 def convert_to_gz(filename):
     try:
@@ -87,9 +56,7 @@ def convert_to_gz(filename):
         upload_file(filename + ".gz")
         f.close()
 
-def convert_to_bz2(filename):
-    print(__file__)
-    
+def convert_to_bz2(filename):   
     input_file = open(filename, "rb")
     output_file = open(filename + '.bz2', "wb")
     output_file.write(bz2.compress(input_file.read()))
@@ -98,3 +65,63 @@ def convert_to_bz2(filename):
 
     output_file.close()
     input_file.close()
+
+def updateTask(filename, newFormat):
+    file_path_processed= filename + "." + newFormat
+    blob = bucket.blob(file_path_processed)
+    if blob.exists:
+        task = Task.query.filer(Task.file_name == filename).first()
+        task.status = 1
+        db.session.add(task)
+        db.session.commit()
+        return True
+    else: 
+        return False
+
+while True:
+    pull_request = PullRequest(
+        subscription=subscription_path,
+        max_messages=10)
+
+    response = subscriber.pull(request=pull_request)
+    ack_ids = []
+    nack_ids = []
+
+    for received_message in response.received_messages:
+        print(f"Mensaje recibido: {received_message.message.data}")
+
+        json_data = json.loads(received_message.message.data)
+
+        format_to_convert = json_data["new_format"]
+        origin_file = json_data["filename"]
+        
+        blob = bucket.blob(origin_file)
+        blob.download_to_filename(f'/{origin_file}')
+    
+        if format_to_convert == 'tarbz2' or format_to_convert == 'tar.bz2' or format_to_convert == 'bz2':
+            convert_to_bz2(origin_file)          
+
+        elif format_to_convert == 'zip':
+            convert_to_zip(origin_file)
+  
+        elif format_to_convert == 'tar.gz' or format_to_convert == 'gz' or format_to_convert == 'targz':
+            convert_to_gz(origin_file)
+       
+        else:
+            print('not supported format?')
+
+        updateResult = updateTask(origin_file, format_to_convert)
+        if updateResult:
+            ack_ids.append(received_message.ack_id)
+        else:
+            nack_ids.append(received_message.ack_id)
+
+        os.remove(f'/{origin_file}')
+
+    if ack_ids:
+        subscriber.acknowledge(subscription_path, ack_ids)
+
+    if nack_ids:
+        subscriber.nacknowledge(subscription_path, nack_ids)
+    
+    time.sleep(1)
