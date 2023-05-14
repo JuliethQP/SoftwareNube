@@ -69,14 +69,16 @@ def convert_to_bz2(filename):
 def updateTask(filename, newFormat):
     file_path_processed= filename + "." + newFormat
     blob = bucket.blob(file_path_processed)
-    if blob.exists:
-        task = Task.query.filter(Task.file_name == filename).first()
-        task.status = 1
-        db.session.add(task)
-        db.session.commit()
-        return True
-    else: 
-        return False
+    # if blob.exists:
+    #     task = Task.query.filter(Task.file_name == filename).first()
+    #     task.status = 1
+    #     db.session.add(task)
+    #     db.session.commit()
+    #     return True
+    # else: 
+    #     return False
+    
+    return True
 
 while True:
     pull_request = PullRequest(
