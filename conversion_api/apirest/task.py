@@ -1,4 +1,5 @@
 from zipfile import ZipFile
+from flask import current_app
 import bz2, gzip
 import time
 import json
