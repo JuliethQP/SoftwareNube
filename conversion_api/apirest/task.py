@@ -102,26 +102,27 @@ def proccessFileTask():
             
             blob = bucket.blob(origin_file)
             blob.download_to_filename(f'{origin_file}')
+            
+            if blob.exists:  
+                if format_to_convert == 'tarbz2' or format_to_convert == 'tar.bz2' or format_to_convert == 'bz2':
+                    convert_to_bz2(origin_file)          
+
+                elif format_to_convert == 'zip':
+                    convert_to_zip(origin_file)
         
-            if format_to_convert == 'tarbz2' or format_to_convert == 'tar.bz2' or format_to_convert == 'bz2':
-                convert_to_bz2(origin_file)          
+                elif format_to_convert == 'tar.gz' or format_to_convert == 'gz' or format_to_convert == 'targz':
+                    convert_to_gz(origin_file)
+            
+                else:
+                    print('not supported format?')
 
-            elif format_to_convert == 'zip':
-                convert_to_zip(origin_file)
-    
-            elif format_to_convert == 'tar.gz' or format_to_convert == 'gz' or format_to_convert == 'targz':
-                convert_to_gz(origin_file)
-        
-            else:
-                print('not supported format?')
+                updateResult = updateTask(origin_file, format_to_convert)
+                if updateResult:
+                    ack_ids.append(received_message.ack_id)
+                else:
+                    nack_ids.append(received_message.ack_id)
 
-            updateResult = updateTask(origin_file, format_to_convert)
-            if updateResult:
-                ack_ids.append(received_message.ack_id)
-            else:
-                nack_ids.append(received_message.ack_id)
-
-            os.remove(f'{origin_file}')
+                os.remove(f'{origin_file}')
 
         
         if ack_ids:
