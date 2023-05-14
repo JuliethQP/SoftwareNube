@@ -96,7 +96,7 @@ while True:
         origin_file = json_data["filename"]
         
         blob = bucket.blob(origin_file)
-        blob.download_to_filename(f'/{origin_file}')
+        blob.download_to_filename(f'{origin_file}')
     
         if format_to_convert == 'tarbz2' or format_to_convert == 'tar.bz2' or format_to_convert == 'bz2':
             convert_to_bz2(origin_file)          
@@ -116,7 +116,7 @@ while True:
         else:
             nack_ids.append(received_message.ack_id)
 
-        os.remove(f'/{origin_file}')
+        os.remove(f'{origin_file}')
 
     if ack_ids:
         subscriber.acknowledge(subscription_path, ack_ids)
