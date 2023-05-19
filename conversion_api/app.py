@@ -3,7 +3,7 @@ from apirest.models import *
 from apirest.views import *
 from flask_restful import Api
 from flask_jwt_extended import JWTManager
-from apirest.task import proccessFileTask
+#from apirest.task import proccessFileTask
 
 app=create_app('tasks')
 app_context=app.app_context()
@@ -25,4 +25,4 @@ api.add_resource(VistaFile, '/api/files/<string:filename>/<int:type>')
 
 jwt = JWTManager(app)
 
-proccessFileTask()
+#proccessFileTask()
