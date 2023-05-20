@@ -17,8 +17,9 @@ RUN pip3 install -r requirements.txt
 COPY . .
 
 # Expose port 5000
-EXPOSE 5000
+# EXPOSE 5000
 
 ENV FLASK_APP=flaskr/app.py
 # Start the application
-CMD [ "python", "-m" , "flask", "run", "--host=0.0.0.0"]
+#CMD [ "python", "-m" , "flask", "run", "--host=0.0.0.0"]
+CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 app:app
