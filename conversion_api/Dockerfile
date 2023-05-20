@@ -22,4 +22,4 @@ COPY . .
 ENV FLASK_APP=flaskr/app.py
 # Start the application
 #CMD [ "python", "-m" , "flask", "run", "--host=0.0.0.0"]
-CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 app:app
+CMD exec gunicorn --bind :8080 --workers 1 --threads 8 --timeout 0 app:app
