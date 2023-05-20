@@ -5,7 +5,6 @@ from google.cloud.sql.connector import Connector, IPTypes
 
 credential_path = "google/proyecto-software-en-la-nube-906bd5b19e9e.json"
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
-port = int(os.environ.get("PORT", 5000))
 
 def getconn():
     ip_type = IPTypes.PRIVATE if os.environ.get("PRIVATE_IP") else IPTypes.PUBLIC
