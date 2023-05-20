@@ -5,6 +5,7 @@ from google.cloud.sql.connector import Connector, IPTypes
 
 credential_path = "google/proyecto-software-en-la-nube-906bd5b19e9e.json"
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
+port = int(os.environ.get("PORT", 5000))
 
 def getconn():
     ip_type = IPTypes.PRIVATE if os.environ.get("PRIVATE_IP") else IPTypes.PUBLIC
@@ -21,7 +22,7 @@ def getconn():
 
 def create_app(config_name):
     app = Flask(__name__)  
-
+    
     with app.app_context():
         app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql+pg8000://"
         app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
@@ -31,6 +32,7 @@ def create_app(config_name):
         app.config['PROPAGATE_EXCEPTIONS']=True
         app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=1)
         puerto = os.environ.get('URL_MAQUINA_VIRTUAL')
+        app.run(host="0.0.0.0", port=port)
         print('---el puerto es',puerto)
         print('---Inicio API')
         
