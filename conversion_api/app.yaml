@@ -1,4 +1,6 @@
 runtime: python38
+api_version: 1
+threadsafe: true
 
 instance_class: F2
 
@@ -6,5 +8,9 @@ instance_class: F2
 handlers:
 - url: /.*
   script: app.app
+
+libraries:
+- name: flask
+  version: 2.2.2
 
 
