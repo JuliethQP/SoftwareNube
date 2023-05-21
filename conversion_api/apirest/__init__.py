@@ -3,7 +3,7 @@ from datetime import timedelta
 import os
 from google.cloud.sql.connector import Connector, IPTypes
 
-credential_path = "/google/proyecto-software-en-la-nube-906bd5b19e9e.json"
+credential_path = "/home/juliethquinchia/SoftwareNube/conversion_api/google/proyecto-software-en-la-nube-906bd5b19e9e.json"
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
 
 def getconn():

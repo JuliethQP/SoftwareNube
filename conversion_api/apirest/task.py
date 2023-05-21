@@ -8,7 +8,7 @@ from .models import db, Task
 from google.cloud import storage, pubsub_v1
 from google.cloud.pubsub_v1.types import PullRequest
 
-client = storage.Client.from_service_account_json('/google/proyecto-software-en-la-nube-906bd5b19e9e.json')
+client = storage.Client.from_service_account_json('/home/juliethquinchia/SoftwareNube/conversion_api/google/proyecto-software-en-la-nube-906bd5b19e9e.json')
 bucket = client.bucket('bucket-flask-app')
 
 puerto = os.environ.get('URL_BALANCEADOR_DE_CARGA')
