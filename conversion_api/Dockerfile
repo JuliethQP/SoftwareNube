@@ -17,7 +17,7 @@ RUN pip3 install -r requirements.txt
 COPY . .
 
 # Expose port 5000
-EXPOSE 5000
+EXPOSE 8080
 
 ENV FLASK_APP=flaskr/app.py
 # Start the application

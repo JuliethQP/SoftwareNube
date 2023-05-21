@@ -30,7 +30,6 @@ def create_app(config_name):
         app.config['SECRET_KEY'] = 'frase-secreta'
         app.config['PROPAGATE_EXCEPTIONS']=True
         app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=1)
-        puerto = os.environ.get('URL_MAQUINA_VIRTUAL')  
   
-        app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+        app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
     return app
