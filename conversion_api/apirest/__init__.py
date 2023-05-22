@@ -4,7 +4,7 @@ import os
 from google.cloud.sql.connector import Connector, IPTypes
 
 
-credential_path = "/.../conversion_api/google/proyecto-software-en-la-nube-906bd5b19e9e.json"
+credential_path = "/.../conversion_api/credenciales/proyecto-software-en-la-nube-906bd5b19e9e.json"
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
 
 def getconn():
