@@ -16,10 +16,10 @@ RUN pip3 install -r requirements.txt
 # Copy the rest of the application code
 COPY . .
 
-# Expose port 5000
 EXPOSE 8080
+#EXPOSE 8080
 
 ENV FLASK_APP=flaskr/app.py
 # Start the application
-CMD [ "python", "-m" , "flask", "run", "--host=0.0.0.0"]
+CMD [ "python", "-m" , "flask", "run", "--host=0.0.0.0", "--port=8080"]
 #CMD exec gunicorn --bind :5000 --workers 1 --threads 8 --timeout 0 app:app
