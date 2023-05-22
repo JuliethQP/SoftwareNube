@@ -10,8 +10,7 @@ from google.cloud import storage, pubsub_v1
 import uuid
 import json
 
-client = storage.Client.from_service_account_json(
-    '/home/juliethquinchia/SoftwareNube/conversion_api/credenciales/proyecto-software-en-la-nube-ec7914a19c66.json')
+client = storage.Client()
 bucket = client.bucket('bucket-flask-app')
 
 publisher = pubsub_v1.PublisherClient()
