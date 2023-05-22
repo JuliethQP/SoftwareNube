@@ -3,7 +3,8 @@ from datetime import timedelta
 import os
 from google.cloud.sql.connector import Connector, IPTypes
 
-credential_path = "/home/juliethquinchia/SoftwareNube/conversion_api/google/proyecto-software-en-la-nube-906bd5b19e9e.json"
+
+credential_path = "/.../conversion_api/google/proyecto-software-en-la-nube-906bd5b19e9e.json"
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
 
 def getconn():
@@ -29,7 +30,6 @@ def create_app(config_name):
         app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
         app.config['SECRET_KEY'] = 'frase-secreta'
         app.config['PROPAGATE_EXCEPTIONS']=True
-        app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=1)
-  
-        app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
+        app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=1)  
+        app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
     return app
