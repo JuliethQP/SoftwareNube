@@ -8,7 +8,7 @@ def getconn():
     ip_type = IPTypes.PRIVATE if os.environ.get("PRIVATE_IP") else IPTypes.PUBLIC
     with Connector() as connector:
         conn = connector.connect(
-            "proyecto-software-en-la-nube:us-central1:conversor-db", # Cloud SQL Instance Connection Name
+            "rational-camera-388014:us-central1:conversor-archivos-bd", # Cloud SQL Instance Connection Name
             "pg8000",
             user="postgres",
             password="admin",
